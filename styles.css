@@ -4,6 +4,13 @@ div.block_culupcoming_events div.content {
     margin: 0;
 }
 
+.block.block_culupcoming_events .reload,
+.dockeditempanel_hd .reload {
+    display: none;
+    text-align: right;
+    font-size: 0.8em;
+}
+
 .block_culupcoming_events .culupcoming_events {
     width: 100%;
     max-height: 400px;
@@ -103,4 +110,24 @@ div.block_culupcoming_events div.content {
     clear: both;
     padding: 10px 8px 0 10px !important;
     border-top: 1px solid #efefef;
+}
+
+.block_culupcoming_events_reload {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.block_culupcoming_events_loading {
+    display: none;
+    text-align: center;
+    vertical-align: middle;
+    /*margin-left: -24px;*/
+}
+
+.block_culupcoming_events_reload img,
+.block_culupcoming_events_loading img {
+    height: 12px;
+    width: 12px;
+    margin: 4px;
+    margin-bottom: 6px;
 }

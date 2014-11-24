@@ -44,13 +44,8 @@ class block_culupcoming_events extends block_base {
         return true;
     }
 
-
-    /**
-     * block_culupcoming_events::get_content()
-     * @return
-     */
     public function get_content() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $COURSE;
 
         require_once($CFG->dirroot . '/calendar/lib.php');
 
@@ -61,19 +56,54 @@ class block_culupcoming_events extends block_base {
         $this->content = new stdClass();
         $this->content->text   = '';
         $this->content->footer = '';
-        $filtercourse = array();
 
         if (empty($this->instance)) {
-            $courseshown = false;
-            $this->content->footer = '';
             return $this->content;
         } else {
-            $courseshown = $this->page->course->id;
+            $limitnum = 7;
+            $page = optional_param('block_culupcoming_events_page', 1, PARAM_RAW);
+            $limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
+            $lastdate = 0;
+
+            list($more, $events) = block_culupcoming_events_get_events($lastdate, $limitfrom, $limitnum);
+            $renderer = $this->page->get_renderer('block_culupcoming_events');
+            $this->content->text = $renderer->culupcoming_events_reload();
+            $this->content->text .= $renderer->culupcoming_events($events);
+
+            $prev = false;
+            $next = false;
+
+            if ($page > 1) {
+                // Add a 'sooner' link.
+                $prev = $page - 1;
+            }
+
+            if ($more) {
+                // Add an 'later' link.
+                $next = $page + 1;
+            }
+
+            $this->content->text .= $renderer->culupcoming_events_pagination($prev, $next);
+
+            if (empty($this->content->text)) {
+                $this->content->text = html_writer::tag('div',
+                                                        get_string('noupcomingevents', 'calendar'),
+                                                        array('class' => 'post', 'style' => 'margin-left: 1em'));
+            }
+
+            $this->page->requires->yui_module(
+                'moodle-block_culupcoming_events-scroll',
+                'M.block_culupcoming_events.scroll.init',
+                array(array('limitnum' => $limitnum))
+            );
+
+            // Footer.
+            $courseshown = $COURSE->id;
+            $context = context_course::instance($courseshown);
             $hrefcal = new moodle_url('/calendar/view.php', array('view' => 'upcoming', 'course' => $courseshown));
             $iconcal = $OUTPUT->pix_icon('i/calendar', '', 'moodle', array('class' => 'iconsmall'));
             $linkcal = html_writer::link($hrefcal, $iconcal . get_string('gotocalendar', 'calendar') . '...');
             $this->content->footer .= html_writer::tag('div', $linkcal);
-            $context = context_course::instance($courseshown);
 
             if (has_any_capability(array('moodle/calendar:manageentries', 'moodle/calendar:manageownentries'), $context)) {
                 $hrefnew = new moodle_url('/calendar/event.php', array('action' => 'new', 'course' => $courseshown));
@@ -81,22 +111,7 @@ class block_culupcoming_events extends block_base {
                 $linknew = html_writer::link($hrefnew, $iconnew . get_string('newevent', 'calendar').'...');
                 $this->content->footer .= html_writer::tag('div', $linknew);
             }
-
-            // Filter events to include only those from the course we are in.
-            $filtercourse = ($courseshown == SITEID) ?
-                calendar_get_default_courses() : array($courseshown => $this->page->course);
-
-            $events = block_culupcoming_events_get_entries($filtercourse);
-            $renderer = $this->page->get_renderer('block_culupcoming_events');
-            $this->content->text = $renderer->culupcoming_events($courseshown, $events);
         }
-
-        if (empty($this->content->text)) {
-            $this->content->text = html_writer::tag('div',
-                                                    get_string('noupcomingevents', 'calendar'),
-                                                    array('class' => 'post', 'style' => 'margin-left: 1em'));
-        }
-
         return $this->content;
     }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "moodle-block_culupcoming_events-scroll",
+  "builds": {
+    "moodle-block_culupcoming_events-scroll": {
+      "jsfiles": [
+        "scroll.js"
+      ]
+    }
+  }
+}

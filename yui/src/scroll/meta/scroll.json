@@ -1,0 +1,14 @@
+{
+  "moodle-block_culupcoming_events-scroll": {
+    "requires": [
+        "base",
+        "node",
+        "io",
+        "json-parse",
+        "dom-core",
+        "querystring",
+        "event-custom",
+        "moodle-core-dock"
+    ]
+  }
+}
