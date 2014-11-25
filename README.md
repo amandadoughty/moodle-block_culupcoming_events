@@ -1,6 +1,6 @@
 CUL Upcoming Events block
 =========================
-The block displays the displays future events in a summarized list. The number of days in advance hard coded to 365 but this will be added as a block setting in a future version.
+The block displays the displays future events in a summarized list. The number of days in advance is hard coded to 365 but this will be added as a block setting in a future version.
 
 Events are generated directly from the calendar and/or activity deadlines, providing a link to full details or
 directly to the activity.
