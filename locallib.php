@@ -35,36 +35,11 @@ require_once($CFG->dirroot . '/calendar/lib.php');
  * @return array $more bool if there are more events to load, $output array of upcoming events
  */
 function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=0, $limitnum=5) {
-    global $CFG, $COURSE;
+    global $COURSE;
 
-    $fromtime = $lastdate;
-    $filtercourse = array();
-    $events = array();
     $output = array();
-    $courseshown = $COURSE->id;
-    // Filter events to include only those from the course we are in.
-    $filtercourse = ($courseshown == SITEID) ?
-        calendar_get_default_courses() : array($courseshown => $COURSE);
-
-    list($courses, $group, $user) = calendar_set_filters($filtercourse);
-
-    $range = 365; // How many days in the future we 'll look.
     $processed = 0;
-    $now = time(); // We 'll need this later.
-    $usermidnighttoday = usergetmidnight($now);
-
-    if ($fromtime) {
-        $tstart = $fromtime;
-    } else {
-        $tstart = $usermidnighttoday;
-    }
-
-    // This works correctly with respect to the user's DST, but it is accurate
-    // only because $fromtime is always the exact midnight of some day!
-    $tend = usergetmidnight($tstart + DAYSECS * $range + 3 * HOURSECS) - 1;
-
-    // Get the events matching our criteria.
-    $events = calendar_get_events($tstart, $tend, $user, $group, $courses);
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events($lastdate);
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.
@@ -143,6 +118,40 @@ function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=
 
     return array($more, $output);
 }
+
+function block_culupcoming_events_get_all_events ($lastdate = 0) {
+    global $COURSE;
+
+    $filtercourse = array();
+    $courseshown = $COURSE->id;
+    $config = get_config('block_culupcoming_events');
+    // Filter events to include only those from the course we are in.
+    $filtercourse = ($courseshown == SITEID) ?
+        calendar_get_default_courses() : array($courseshown => $COURSE);
+
+    list($courses, $group, $user) = calendar_set_filters($filtercourse);
+
+    $range = $config->lookahead; // How many days in the future we 'll look.
+    $processed = 0;
+    $now = time(); // We 'll need this later.
+    $usermidnighttoday = usergetmidnight($now);
+
+    if ($lastdate) {
+        $tstart = $lastdate;
+    } else {
+        $tstart = $usermidnighttoday;
+    }
+    // This works correctly with respect to the user's DST, but it is accurate
+    // only because $fromtime is always the exact midnight of some day!
+    $tend = usergetmidnight($tstart + DAYSECS * $range + 3 * HOURSECS) - 1;
+
+    // Get the events matching our criteria.
+    $events = calendar_get_events($tstart, $tend, $user, $group, $courses);
+
+    return array($filtercourse, $events);
+}
+
+
 
 /**
  * Gets the calendar upcoming event metadata
@@ -344,28 +353,11 @@ function block_culupcoming_events_get_site_img () {
  * @return array $events array of upcoming event events
  */
 function block_culupcoming_events_ajax_reload($count, $lastid=0) {
-    global $CFG, $COURSE;
+    global $COURSE;
 
-    $filtercourse = array();
-    $events = array();
     $output = array();
-    $courseshown = $COURSE->id;
-    // Filter events to include only those from the course we are in.
-    $filtercourse = ($courseshown == SITEID) ?
-        calendar_get_default_courses() : array($courseshown => $COURSE);
-
-    list($courses, $group, $user) = calendar_set_filters($filtercourse);
-
-    $range = 365; // How many days in the future we 'll look.
-    $now = time(); // We 'll need this later.
-    $tstart = usergetmidnight($now);
-    // This works correctly with respect to the user's DST, but it is accurate
-    // only because $fromtime is always the exact midnight of some day!
-    $tend = usergetmidnight($tstart + DAYSECS * $range + 3 * HOURSECS) - 1;
-
-    // Get the events matching our criteria.
-    $events = calendar_get_events($tstart, $tend, $user, $group, $courses);
     $processed = 0;
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events();
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.
@@ -393,7 +385,6 @@ function block_culupcoming_events_ajax_reload($count, $lastid=0) {
             }
             $output[] = $event;
             ++$processed;
-
             // We only want the events up to the last one currently displayed
             // when we are reloading.
             if ($event->id == $lastid) {

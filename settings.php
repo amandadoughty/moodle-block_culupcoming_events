@@ -27,6 +27,21 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configtext('block_upcoming_events_gravatar', get_string('gravatardefaulturl', 'admin'),
-                       get_string('gravatardefaulturl_help', 'admin'), 'mm'));
+    $settings->add(new admin_setting_configtext(
+        'block_culupcoming_events/gravatar',
+        get_string('gravatardefaulturl', 'admin'),
+        get_string('gravatardefaulturl_help', 'admin'), 'mm'
+    ));
+
+    $options = array();
+    for ($i = 1; $i <= 365; $i++) {
+        $options[$i] = $i;
+    }
+    $settings->add(new admin_setting_configselect(
+        'block_culupcoming_events/lookahead',
+        new lang_string('lookahead','block_culupcoming_events'),
+        new lang_string('lookahead_help', 'block_culupcoming_events'),
+        365,
+        $options
+    ));
 }

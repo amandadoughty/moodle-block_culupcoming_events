@@ -141,6 +141,7 @@ M.block_culupcoming_events.scroll = {
                 },
                 failure: function() {
                     // error message
+                    Y.log('addevents failed');
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                     this.timer.cancel();
@@ -176,6 +177,7 @@ M.block_culupcoming_events.scroll = {
                     var data = Y.JSON.parse(e.responseText);
 
                     if (data.error) {
+                        Y.log(data.error);
                         this.timer.cancel();
                     } else {
                         if (data.output) {
@@ -189,6 +191,7 @@ M.block_culupcoming_events.scroll = {
                 },
                 failure: function() {
                     // error message
+                    Y.log('reloadevents failed');
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                     this.timer.cancel();

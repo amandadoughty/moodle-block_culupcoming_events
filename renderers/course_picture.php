@@ -218,6 +218,8 @@ class block_culupcoming_events_course_picture implements renderable {
     public function get_url(moodle_page $page, renderer_base $renderer = null) {
         global $CFG, $DB;
 
+        $config = get_config('block_culupcoming_events');
+
         if (is_null($renderer)) {
             $renderer = $page->get_renderer('core');
         }
@@ -267,7 +269,7 @@ class block_culupcoming_events_course_picture implements renderable {
                 }
             }
 
-        } else if (!empty($CFG->block_upcoming_events_gravatar)) {
+        } else if (!empty($config->gravatar)) {
             // Normalise the size variable to acceptable bounds.
             if ($size < 1 || $size > 512) {
                 $size = 35;
@@ -278,7 +280,7 @@ class block_culupcoming_events_course_picture implements renderable {
             // Build a gravatar URL with what we know.
 
             // Find the best default image URL we can (MDL-35669).
-            if (empty($CFG->block_upcoming_events_gravatar)) {
+            if (empty($config->gravatar)) {
                 $absoluteimagepath = $page->theme->resolve_image_location('u/f2', 'core');
                 if (strpos($absoluteimagepath, $CFG->dirroot) === 0) {
                     $gravatardefault = $CFG->wwwroot . substr($absoluteimagepath, strlen($CFG->dirroot));
@@ -286,7 +288,7 @@ class block_culupcoming_events_course_picture implements renderable {
                     $gravatardefault = $CFG->wwwroot . '/pix/u/f2.png';
                 }
             } else {
-                $gravatardefault = $CFG->block_upcoming_events_gravatar;
+                $gravatardefault = $config->gravatar;
             }
 
             // If the currently requested page is https then we'll return an
