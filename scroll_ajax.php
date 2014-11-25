@@ -41,11 +41,12 @@ if (!confirm_sesskey()) {
 $limitfrom = required_param('limitfrom', PARAM_INT);
 $limitnum = required_param('limitnum', PARAM_INT);
 $lastdate = required_param('lastdate', PARAM_INT);
+$lastid = required_param('lastid', PARAM_INT);
 $list = '';
 $end = false;
 
 // Get more events.
-list($more, $events) = block_culupcoming_events_get_events($lastdate, $limitfrom, $limitnum);
+list($more, $events) = block_culupcoming_events_get_events($lastid, $lastdate, $limitfrom, $limitnum);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 if ($events) {

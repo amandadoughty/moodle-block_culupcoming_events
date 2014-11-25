@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/calendar/lib.php');
  * @param int $limitnum maximum number of events
  * @return array $more bool if there are more events to load, $output array of upcoming events
  */
-function block_culupcoming_events_get_events($lastdate=0, $limitfrom=0, $limitnum=5) {
+function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=0, $limitnum=5) {
     global $CFG, $COURSE;
 
     $fromtime = $lastdate;
@@ -93,6 +93,10 @@ function block_culupcoming_events_get_events($lastdate=0, $limitfrom=0, $limitnu
 
             ++$processed;
 
+            if ($event->id == $lastid) {
+                continue;
+            }
+
             if ($processed <= $limitfrom) {
                 continue;
             }
@@ -143,7 +147,7 @@ function block_culupcoming_events_get_events($lastdate=0, $limitfrom=0, $limitnu
 /**
  * Gets the calendar upcoming event metadata
  *
- * @param stdClass $event 
+ * @param stdClass $event
  * @return stdClass $event with additional attributes
  */
 function block_upcoming_events_add_event_metadata($event, $filtercourse) {
@@ -354,14 +358,7 @@ function block_culupcoming_events_ajax_reload($count, $lastid=0) {
 
     $range = 365; // How many days in the future we 'll look.
     $now = time(); // We 'll need this later.
-    $usermidnighttoday = usergetmidnight($now);
-
-    if ($fromtime) {
-        $tstart = $fromtime;
-    } else {
-        $tstart = $usermidnighttoday;
-    }
-
+    $tstart = usergetmidnight($now);
     // This works correctly with respect to the user's DST, but it is accurate
     // only because $fromtime is always the exact midnight of some day!
     $tend = usergetmidnight($tstart + DAYSECS * $range + 3 * HOURSECS) - 1;

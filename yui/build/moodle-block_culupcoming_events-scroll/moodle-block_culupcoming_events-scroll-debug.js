@@ -115,6 +115,7 @@ M.block_culupcoming_events.scroll = {
             sesskey : M.cfg.sesskey,
             limitfrom: 0,
             limitnum: this.limitnum,
+            lastid : lastid,
             lastdate : lastdate
         };
 

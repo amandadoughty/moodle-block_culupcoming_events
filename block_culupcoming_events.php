@@ -64,8 +64,9 @@ class block_culupcoming_events extends block_base {
             $page = optional_param('block_culupcoming_events_page', 1, PARAM_RAW);
             $limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
             $lastdate = 0;
+            $lastid = 0;
 
-            list($more, $events) = block_culupcoming_events_get_events($lastdate, $limitfrom, $limitnum);
+            list($more, $events) = block_culupcoming_events_get_events($lastid, $lastdate, $limitfrom, $limitnum);
             $renderer = $this->page->get_renderer('block_culupcoming_events');
             $this->content->text = $renderer->culupcoming_events_reload();
             $this->content->text .= $renderer->culupcoming_events($events);
