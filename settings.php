@@ -39,7 +39,7 @@ if ($ADMIN->fulltree) {
     }
     $settings->add(new admin_setting_configselect(
         'block_culupcoming_events/lookahead',
-        new lang_string('lookahead','block_culupcoming_events'),
+        new lang_string('lookahead', 'block_culupcoming_events'),
         new lang_string('lookahead_help', 'block_culupcoming_events'),
         365,
         $options

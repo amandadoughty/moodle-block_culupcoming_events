@@ -10,4 +10,4 @@ There are also links to Go to calendar... and add a New Event....
 The block is based on the core Moodle Upcoming Events Block but is styled like a feed to match the CUL Activity Feed
 Block.
 
-Beta Version 2 adds dynamic scrolling and updating of the events.
+RC Version 2 adds dynamic scrolling and updating of the events.

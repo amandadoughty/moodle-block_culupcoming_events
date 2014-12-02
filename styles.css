@@ -51,15 +51,6 @@ div.block_culupcoming_events div.content {
     float: left;
 }
 
-.block_culupcoming_events .avatar img,
-.block_culupcoming_events .content .avatar .personpicture {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 35px;
-    max-width: none !important;
-}
-
 .block_culupcoming_events .avatar img {
     position: absolute;
     top: -100%;

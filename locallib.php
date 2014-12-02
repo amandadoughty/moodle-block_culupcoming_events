@@ -131,7 +131,7 @@ function block_culupcoming_events_get_all_events ($lastdate = 0) {
 
     list($courses, $group, $user) = calendar_set_filters($filtercourse);
 
-    $range = $config->lookahead; // How many days in the future we 'll look.
+    $lookahead = $config->lookahead; // How many days in the future we 'll look.
     $processed = 0;
     $now = time(); // We 'll need this later.
     $usermidnighttoday = usergetmidnight($now);
@@ -141,10 +141,13 @@ function block_culupcoming_events_get_all_events ($lastdate = 0) {
     } else {
         $tstart = $usermidnighttoday;
     }
-    // This works correctly with respect to the user's DST, but it is accurate
-    // only because $fromtime is always the exact midnight of some day!
-    $tend = usergetmidnight($tstart + DAYSECS * $range + 3 * HOURSECS) - 1;
 
+    // This function adds the lookahead (in seconds) plus one day (in seconds)
+    // to the current timestamp.
+    // It then deducts one second to get the resulting end date at 23:59.
+    // The extra day is added to account for resetting the result to midnight.
+    // Otherwise a lookahead setting of 1 day would give an end date of today at 23:59.
+    $tend = usergetmidnight($now + DAYSECS * $lookahead + DAYSECS) - 1;
     // Get the events matching our criteria.
     $events = calendar_get_events($tstart, $tend, $user, $group, $courses);
 
