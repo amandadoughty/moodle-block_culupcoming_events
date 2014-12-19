@@ -29,17 +29,11 @@ define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__) . '/locallib.php');
 
+require_sesskey();
 require_login();
 $PAGE->set_context(context_system::instance());
-
-if (!confirm_sesskey()) {
-    $error = array('error' => get_string('invalidsesskey', 'error'));
-    die(json_encode($error));
-}
-
 $lastid = required_param('lastid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
-$count = required_param('count', PARAM_INT);
 $list = '';
 
 // Get more events.
@@ -50,4 +44,4 @@ if ($events) {
     $list .= $renderer->culupcoming_events_items ($events);
 }
 
-echo json_encode(array('output' => $list, 'count' => $count));
+echo json_encode(array('output' => $list));

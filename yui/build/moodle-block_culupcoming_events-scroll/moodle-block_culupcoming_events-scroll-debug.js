@@ -164,8 +164,7 @@ M.block_culupcoming_events.scroll = {
         var params = {
             sesskey : M.cfg.sesskey,
             lastid : lastid,
-            courseid: this.courseid,
-            count: count
+            courseid: this.courseid
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/reload_ajax.php', {

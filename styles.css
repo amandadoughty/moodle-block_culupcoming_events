@@ -34,6 +34,10 @@ div.block_culupcoming_events div.content {
     background-color: #fffacd;
 }
 
+.block_culupcoming_events .menubar li {
+    padding: 0;
+}
+
 .block_culupcoming_events .avatar {
     display: inline-block;
     float: left;

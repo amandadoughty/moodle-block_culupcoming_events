@@ -355,11 +355,10 @@ function block_culupcoming_events_get_site_img () {
  * @param  int $lastid the id of the last event loaded
  * @return array $events array of upcoming event events
  */
-function block_culupcoming_events_ajax_reload($count, $lastid=0) {
+function block_culupcoming_events_ajax_reload($lastid=0) {
     global $COURSE;
 
     $output = array();
-    $processed = 0;
     list($filtercourse, $events) = block_culupcoming_events_get_all_events();
 
     if ($events !== false) {
@@ -387,7 +386,6 @@ function block_culupcoming_events_ajax_reload($count, $lastid=0) {
 
             }
             $output[] = $event;
-            ++$processed;
             // We only want the events up to the last one currently displayed
             // when we are reloading.
             if ($event->id == $lastid) {
@@ -396,12 +394,9 @@ function block_culupcoming_events_ajax_reload($count, $lastid=0) {
         }
     }
 
-    if ($processed > $count) {
-        foreach ($output as $key => $event) {
-            $output[$key] = block_upcoming_events_add_event_metadata($event, $filtercourse);
-        }
-        return $output;
+    foreach ($output as $key => $event) {
+        $output[$key] = block_upcoming_events_add_event_metadata($event, $filtercourse);
     }
+    return $output;
 
-    return false;
 }

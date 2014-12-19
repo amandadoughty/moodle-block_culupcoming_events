@@ -30,14 +30,9 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__) . '/locallib.php');
 require_once($CFG->dirroot . '/calendar/lib.php');
 
+require_sesskey();
 require_login();
 $PAGE->set_context(context_system::instance());
-
-if (!confirm_sesskey()) {
-    $error = array('error' => get_string('invalidsesskey', 'error'));
-    die(json_encode($error));
-}
-
 $limitfrom = required_param('limitfrom', PARAM_INT);
 $limitnum = required_param('limitnum', PARAM_INT);
 $lastdate = required_param('lastdate', PARAM_INT);
@@ -54,7 +49,7 @@ if ($events) {
 }
 
 if (!$more) {
-    $list .= '<li>No more events</li>';
+    $list .= html_writer::tag('li', get_string('nomoreevents', 'block_culupcoming_events'));
     $end = true;
 }
 
