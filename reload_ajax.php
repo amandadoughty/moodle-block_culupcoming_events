@@ -35,13 +35,19 @@ $PAGE->set_context(context_system::instance());
 $lastid = required_param('lastid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $list = '';
+$end = false;
 
 // Get more events.
-$events = block_culupcoming_events_ajax_reload($count, $lastid);
+list($more, $events) = block_culupcoming_events_ajax_reload($lastid);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 if ($events) {
     $list .= $renderer->culupcoming_events_items ($events);
 }
 
-echo json_encode(array('output' => $list));
+if (!$more) {
+    $list .= html_writer::tag('li', get_string('nomoreevents', 'block_culupcoming_events'));
+    $end = true;
+}
+
+echo json_encode(array('output' => $list, 'end' => $end));
