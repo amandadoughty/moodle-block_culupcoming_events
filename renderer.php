@@ -49,7 +49,6 @@ class block_culupcoming_events_renderer extends plugin_renderer_base {
         if (!count($eventitems) || !is_numeric($courseid)) {
             return html_writer::tag('div', '<ul></ul>', array('class' => 'culupcoming_events'));
         }
-
         // Generate an id and the required JS call to make this a nice widget.
         $divid = html_writer::random_id('culupcoming_events');
         // Start content generation.

@@ -60,7 +60,7 @@ function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=
                     if (!$cm = get_coursemodule_from_instance($event->modulename, $event->instance)) {
                         continue;
                     }
-                    if (!coursemodule_visible_for_user($cm)) {
+                    if (!\core_availability\info_module::is_user_visible($cm)) {
                         continue;
                     }
                 }
@@ -102,7 +102,7 @@ function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=
                     if (!$cm = get_coursemodule_from_instance($event->modulename, $event->instance)) {
                         continue;
                     }
-                    if (!coursemodule_visible_for_user($cm)) {
+                    if (!\core_availability\info_module::is_user_visible($cm)) {
                         continue;
                     }
                 }
