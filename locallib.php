@@ -366,6 +366,7 @@ function block_culupcoming_events_ajax_reload($lastid=0) {
         $modinfo = get_fast_modinfo($COURSE);
 
         foreach ($events as $key => $event) {
+            unset($events[$key]);
 
             if (!empty($event->modulename)) {
                 if ($event->courseid == $COURSE->id) {
@@ -397,6 +398,37 @@ function block_culupcoming_events_ajax_reload($lastid=0) {
     foreach ($output as $key => $event) {
         $output[$key] = block_upcoming_events_add_event_metadata($event, $filtercourse);
     }
-    return $output;
 
+    // Find out if there are more to display.
+    $more = false;
+    if ($events !== false) {
+
+        foreach ($events as $event) {
+            if (!empty($event->modulename)) {
+                if ($event->courseid == $COURSE->id) {
+                    if (isset($modinfo->instances[$event->modulename][$event->instance])) {
+                        $cm = $modinfo->instances[$event->modulename][$event->instance];
+                        if (!$cm->uservisible) {
+                            continue;
+                        }
+                    }
+                } else {
+                    if (!$cm = get_coursemodule_from_instance($event->modulename, $event->instance)) {
+                        continue;
+                    }
+                    if (!coursemodule_visible_for_user($cm)) {
+                        continue;
+                    }
+                }
+            }
+
+            $more = true;
+
+            if ($more) {
+                break;
+            }
+        }
+    }
+
+    return array($more, $output);
 }
