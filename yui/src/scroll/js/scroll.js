@@ -65,9 +65,9 @@ M.block_culupcoming_events.scroll = {
                         h2.append(reloaddiv);
                         reloaddiv.setStyle('display', 'inline-block');
                         reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                        if (reloader) {
-                            reloader.on('click', this.reloadblock, this);
-                        }
+                    }
+                    if (reloader) {
+                        reloader.on('click', this.reloadblock, this);
                     }
                 },this);
             },this);
