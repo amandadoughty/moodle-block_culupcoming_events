@@ -37,7 +37,12 @@ class block_culupcoming_events extends block_base {
      * block_culupcoming_events::init()
      */
     public function init() {
-        $this->title = get_string('blocktitle', 'block_culupcoming_events');
+        global $COURSE;
+        if ($COURSE->id != SITEID) {
+            $this->title = get_string('blocktitlecourse', 'block_culupcoming_events');
+        } else {
+            $this->title = get_string('blocktitlesite', 'block_culupcoming_events');
+        }        
     }
 
     public function has_config() {

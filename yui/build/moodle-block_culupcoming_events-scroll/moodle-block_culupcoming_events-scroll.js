@@ -38,12 +38,11 @@ M.block_culupcoming_events.scroll = {
             Y.one('.pages').hide();
         }
 
-        var reloaddiv = Y.one('.reload');
+        var reloaddiv = Y.one('.block_culupcoming_events .reload');
         var h2 = Y.one('.block_culupcoming_events .header .title h2');
         h2.append(reloaddiv);
         reloaddiv.setStyle('display', 'inline-block');
         Y.one('.reload .block_culupcoming_events_reload').on('click', this.reloadblock, this);
-        Y.all('.block_culupcoming_events .removelink').on('click', this.removenotification, this);
         this.scroller = Y.one('.block_culupcoming_events .culupcoming_events');
         this.scroller.on('scroll', this.filltobelowblock, this);
         this.limitnum = params.limitnum;
@@ -60,16 +59,18 @@ M.block_culupcoming_events.scroll = {
         dock.on(['dock:initialised', 'dock:itemadded'], function() {
             Y.Array.each(dock.dockeditems, function(dockeditem) {
                 dockeditem.on('dockeditem:showcomplete', function() {
-                    var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                    if (!reloader) {
-                        var reloaddiv = Y.one('.reload').cloneNode(true);
-                        var h2 = Y.one('.dockeditempanel_hd h2');
-                        h2.append(reloaddiv);
-                        reloaddiv.setStyle('display', 'inline-block');
-                        reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                    }
-                    if (reloader) {
-                        reloader.on('click', this.reloadblock, this);
+                    if (dockeditem.get('blockclass') == 'culupcoming_events') {
+                        var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
+                        if (!reloader) {
+                            var reloaddiv = Y.one('.block_culupcoming_events .reload').cloneNode(true);
+                            var h2 = Y.one('#instance-' + dockeditem.get('blockinstanceid') + '-header' );
+                            h2.append(reloaddiv);
+                            reloaddiv.setStyle('display', 'inline-block');
+                            reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
+                        }
+                        if (reloader) {
+                            reloader.on('click', this.reloadblock, this);
+                        }
                     }
                 },this);
             },this);
