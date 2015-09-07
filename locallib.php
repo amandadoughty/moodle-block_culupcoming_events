@@ -34,22 +34,23 @@ require_once($CFG->dirroot . '/calendar/lib.php');
  * @param int $limitnum maximum number of events
  * @return array $more bool if there are more events to load, $output array of upcoming events
  */
-function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=0, $limitnum=5) {
-    global $COURSE;
+function block_culupcoming_events_get_events($courseid=SITEID, $lastid=0, $lastdate=0, $limitfrom=0, $limitnum=5) {
+    global $DB;
 
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
     $output = array();
     $processed = 0;
-    list($filtercourse, $events) = block_culupcoming_events_get_all_events($lastdate);
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events($course, $lastdate);
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.
-        $modinfo = get_fast_modinfo($COURSE);
+        $modinfo = get_fast_modinfo($courseid);
 
         foreach ($events as $key => $event) {
             unset($events[$key]);
 
             if (!empty($event->modulename)) {
-                if ($event->courseid == $COURSE->id) {
+                if ($event->courseid == $courseid) {
                     if (isset($modinfo->instances[$event->modulename][$event->instance])) {
                         $cm = $modinfo->instances[$event->modulename][$event->instance];
                         if (!$cm->uservisible) {
@@ -91,7 +92,7 @@ function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=
 
         foreach ($events as $event) {
             if (!empty($event->modulename)) {
-                if ($event->courseid == $COURSE->id) {
+                if ($event->courseid == $courseid) {
                     if (isset($modinfo->instances[$event->modulename][$event->instance])) {
                         $cm = $modinfo->instances[$event->modulename][$event->instance];
                         if (!$cm->uservisible) {
@@ -119,15 +120,14 @@ function block_culupcoming_events_get_events($lastid=0, $lastdate=0, $limitfrom=
     return array($more, $output);
 }
 
-function block_culupcoming_events_get_all_events ($lastdate = 0) {
-    global $COURSE;
+function block_culupcoming_events_get_all_events ($course, $lastdate = 0) {
 
     $filtercourse = array();
-    $courseshown = $COURSE->id;
+    $courseshown = $course->id;
     $config = get_config('block_culupcoming_events');
     // Filter events to include only those from the course we are in.
     $filtercourse = ($courseshown == SITEID) ?
-        calendar_get_default_courses() : array($courseshown => $COURSE);
+        calendar_get_default_courses() : array($courseshown => $course);
 
     list($courses, $group, $user) = calendar_set_filters($filtercourse);
 
@@ -243,20 +243,13 @@ function block_culupcoming_events_get_course_displayname ($courseid, $filtercour
     if (!$courseid) {
         return '';
     } else if (array_key_exists($courseid, $filtercourse)) {
-        $coursefullname  = $filtercourse[$courseid]->fullname;
         $courseshortname = $filtercourse[$courseid]->shortname;
-        $courseidnumber  = $filtercourse[$courseid]->idnumber;
     } else {
         $course = $DB->get_record('course', array('id' => $courseid));
-        $coursefullname  = $course->fullname;
         $courseshortname = $course->shortname;
-        $courseidnumber  = $course->idnumber;
     }
 
-    $coursedisplayname = preg_match('/\A\s*\z/', trim($courseidnumber)) ?
-        $courseshortname : $courseidnumber;
-
-    return $coursedisplayname;
+    return $courseshortname;
 }
 
 /**

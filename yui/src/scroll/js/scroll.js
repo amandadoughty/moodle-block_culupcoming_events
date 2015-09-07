@@ -57,7 +57,7 @@ M.block_culupcoming_events.scroll = {
         dock.on(['dock:initialised', 'dock:itemadded'], function() {
             Y.Array.each(dock.dockeditems, function(dockeditem) {
                 dockeditem.on('dockeditem:showcomplete', function() {
-                    if (dockeditem.get('blockclass') == 'culupcoming_events') {
+                    if (dockeditem.get('blockclass') === 'culupcoming_events') {
                         var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
                         if (!reloader) {
                             var reloaddiv = Y.one('.block_culupcoming_events .reload').cloneNode(true);
@@ -115,7 +115,8 @@ M.block_culupcoming_events.scroll = {
             limitfrom: 0,
             limitnum: this.limitnum,
             lastid : lastid,
-            lastdate : lastdate
+            lastdate : lastdate,
+            courseid: this.courseid
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/scroll_ajax.php', {

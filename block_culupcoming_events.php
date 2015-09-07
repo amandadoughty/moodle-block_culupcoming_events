@@ -42,7 +42,7 @@ class block_culupcoming_events extends block_base {
             $this->title = get_string('blocktitlecourse', 'block_culupcoming_events');
         } else {
             $this->title = get_string('blocktitlesite', 'block_culupcoming_events');
-        }        
+        }
     }
 
     public function has_config() {
@@ -71,7 +71,7 @@ class block_culupcoming_events extends block_base {
             $lastdate = 0;
             $lastid = 0;
 
-            list($more, $events) = block_culupcoming_events_get_events($lastid, $lastdate, $limitfrom, $limitnum);
+            list($more, $events) = block_culupcoming_events_get_events($COURSE->id, $lastid, $lastdate, $limitfrom, $limitnum);
             $renderer = $this->page->get_renderer('block_culupcoming_events');
             $this->content->text = $renderer->culupcoming_events_reload();
             $this->content->text .= $renderer->culupcoming_events($events);
