@@ -100,7 +100,7 @@ class block_culupcoming_events extends block_base {
             $this->page->requires->yui_module(
                 'moodle-block_culupcoming_events-scroll',
                 'M.block_culupcoming_events.scroll.init',
-                array(array('limitnum' => $limitnum))
+                array(array('limitnum' => $limitnum, 'courseid' => $COURSE->id))
             );
 
             // Footer.

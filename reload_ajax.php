@@ -38,7 +38,7 @@ $list = '';
 $end = false;
 
 // Get more events.
-list($more, $events) = block_culupcoming_events_ajax_reload($lastid);
+list($more, $events) = block_culupcoming_events_ajax_reload($courseid, $lastid);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 if ($events) {

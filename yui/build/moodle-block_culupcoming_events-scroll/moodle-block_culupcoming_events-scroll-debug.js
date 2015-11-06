@@ -46,7 +46,6 @@ M.block_culupcoming_events.scroll = {
         this.scroller = Y.one('.block_culupcoming_events .culupcoming_events');
         this.scroller.on('scroll', this.filltobelowblock, this);
         this.limitnum = params.limitnum;
-        this.count = params.count;
         this.courseid = params.courseid;
         // Refresh the feed every 5 mins.
         this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
@@ -183,7 +182,6 @@ M.block_culupcoming_events.scroll = {
                     } else {
                         if (data.output) {
                             Y.one('.block_culupcoming_events .culupcoming_events ul').set('innerHTML', data.output);
-                            this.count = data.count;
                         }
                     }
 

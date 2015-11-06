@@ -344,25 +344,26 @@ function block_culupcoming_events_get_site_img () {
 
 /**
  * Reload the events including newer ones via ajax call
- * @param  int $count the number of event salready loaded
- * @param  int $lastid the id of the last event loaded
+ * @param  int $courseid the course id
+ * @param  int $lastdate the date of the last event loaded
  * @return array $events array of upcoming event events
  */
-function block_culupcoming_events_ajax_reload($lastid=0) {
-    global $COURSE;
+function block_culupcoming_events_ajax_reload($courseid, $lastid) {
+    global $DB;
 
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
     $output = array();
-    list($filtercourse, $events) = block_culupcoming_events_get_all_events();
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events($course);
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.
-        $modinfo = get_fast_modinfo($COURSE);
+        $modinfo = get_fast_modinfo($course);
 
         foreach ($events as $key => $event) {
             unset($events[$key]);
 
             if (!empty($event->modulename)) {
-                if ($event->courseid == $COURSE->id) {
+                if ($event->courseid == $course->id) {
                     if (isset($modinfo->instances[$event->modulename][$event->instance])) {
                         $cm = $modinfo->instances[$event->modulename][$event->instance];
                         if (!$cm->uservisible) {
@@ -377,7 +378,6 @@ function block_culupcoming_events_ajax_reload($lastid=0) {
                         continue;
                     }
                 }
-
             }
             $output[] = $event;
             // We only want the events up to the last one currently displayed
@@ -398,7 +398,7 @@ function block_culupcoming_events_ajax_reload($lastid=0) {
 
         foreach ($events as $event) {
             if (!empty($event->modulename)) {
-                if ($event->courseid == $COURSE->id) {
+                if ($event->courseid == $course->id) {
                     if (isset($modinfo->instances[$event->modulename][$event->instance])) {
                         $cm = $modinfo->instances[$event->modulename][$event->instance];
                         if (!$cm->uservisible) {
