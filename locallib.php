@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/calendar/lib.php');
  * @param int $limitnum maximum number of events
  * @return array $more bool if there are more events to load, $output array of upcoming events
  */
-function block_culupcoming_events_get_events($courseid=SITEID, $lastid=0, $lastdate=0, $limitfrom=0, $limitnum=5) {
+function block_culupcoming_events_get_events($courseid = SITEID, $lastid = 0, $lastdate = 0, $limitfrom = 0, $limitnum = 5) {
     global $DB;
 
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -121,15 +121,21 @@ function block_culupcoming_events_get_events($courseid=SITEID, $lastid=0, $lastd
 }
 
 function block_culupcoming_events_get_all_events ($course, $lastdate = 0) {
+    global $USER;
 
     $filtercourse = array();
     $courseshown = $course->id;
     $config = get_config('block_culupcoming_events');
     // Filter events to include only those from the course we are in.
-    $filtercourse = ($courseshown == SITEID) ?
-        calendar_get_default_courses() : array($courseshown => $course);
-
-    list($courses, $group, $user) = calendar_set_filters($filtercourse);
+    if ($courseshown == SITEID) {
+        $filtercourse = calendar_get_default_courses();
+        list($courses, $groups, $user) = calendar_set_filters($filtercourse, true);
+    } else {
+        $filtercourse = array($courseshown => $course);
+        list($courses, $groups, $user) = calendar_set_filters($filtercourse, true);
+        $courses = array($courseshown);
+        $user = false;
+    }
 
     $lookahead = $config->lookahead; // How many days in the future we 'll look.
     $processed = 0;
@@ -149,7 +155,7 @@ function block_culupcoming_events_get_all_events ($course, $lastdate = 0) {
     // Otherwise a lookahead setting of 1 day would give an end date of today at 23:59.
     $tend = usergetmidnight($now + DAYSECS * $lookahead + DAYSECS) - 1;
     // Get the events matching our criteria.
-    $events = calendar_get_events($tstart, $tend, $user, $group, $courses);
+    $events = calendar_get_events($tstart, $tend, $user, $groups, $courses);
 
     return array($filtercourse, $events);
 }
