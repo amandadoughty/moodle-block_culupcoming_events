@@ -27,20 +27,30 @@
 require_once($CFG->dirroot . '/calendar/lib.php');
 
 /**
- * Gets the calendar upcoming events
+ * Retrieves and filters the calendar upcoming events and adds meta data
  *
+ * @param int $lookahead the number of days to look ahead
+ * @param int $courseid the course the block is displaying events for
+ * @param int $lastid the id of the last event loaded
  * @param array|int $lastdate the date of the last event loaded
  * @param int $limitfrom the index to start from (for non-JS paging)
  * @param int $limitnum maximum number of events
  * @return array $more bool if there are more events to load, $output array of upcoming events
  */
-function block_culupcoming_events_get_events($courseid = SITEID, $lastid = 0, $lastdate = 0, $limitfrom = 0, $limitnum = 5) {
+function block_culupcoming_events_get_events(
+    $lookahead = 365,
+    $courseid = SITEID,
+    $lastid = 0,
+    $lastdate = 0,
+    $limitfrom = 0,
+    $limitnum = 5) {
+
     global $DB;
 
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
     $output = array();
     $processed = 0;
-    list($filtercourse, $events) = block_culupcoming_events_get_all_events($course, $lastdate);
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events($lookahead, $course, $lastdate);
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.
@@ -120,12 +130,18 @@ function block_culupcoming_events_get_events($courseid = SITEID, $lastid = 0, $l
     return array($more, $output);
 }
 
-function block_culupcoming_events_get_all_events ($course, $lastdate = 0) {
+/* Gets the raw calendar upcoming events
+ *
+ * @param int $lookahead the number of days to look ahead
+ * @param stClass $course the course the block is displaying events for
+ * @param array|int $lastdate the date of the last event loaded
+ * @return array $filterclass, $events
+ */
+function block_culupcoming_events_get_all_events ($lookahead, $course, $lastdate = 0) {
     global $USER;
 
     $filtercourse = array();
     $courseshown = $course->id;
-    $config = get_config('block_culupcoming_events');
     // Filter events to include only those from the course we are in.
     if ($courseshown == SITEID) {
         $filtercourse = calendar_get_default_courses();
@@ -137,7 +153,6 @@ function block_culupcoming_events_get_all_events ($course, $lastdate = 0) {
         $user = false;
     }
 
-    $lookahead = $config->lookahead; // How many days in the future we 'll look.
     $processed = 0;
     $now = time(); // We 'll need this later.
     $usermidnighttoday = usergetmidnight($now);
@@ -240,7 +255,8 @@ function block_culupcoming_events_human_timing ($time) {
 
 /**
  * Get the course display name
- * @param  type $courseid
+ * 
+ * @param  int $courseid
  * @return string
  */
 function block_culupcoming_events_get_course_displayname ($courseid, $filtercourse) {
@@ -260,11 +276,8 @@ function block_culupcoming_events_get_course_displayname ($courseid, $filtercour
 
 /**
  * Get a course avatar
- * @global type $CFG
- * @global type $DB
- * @global type $PAGE
- * @global type $OUTPUT
- * @param  type $courseid
+ * 
+ * @param  int $courseid
  * @return string Image tag, wrapped in a hyperlink.
  */
 function block_culupcoming_events_get_course_img ($courseid) {
@@ -296,9 +309,8 @@ function block_culupcoming_events_get_course_img ($courseid) {
 
 /**
  * Get a user avatar
- * @global type $DB
- * @global type $OUTPUT
- * @param  type $userid
+ * 
+ * @param  int $userid
  * @return string Image tag, possibly wrapped in a hyperlink.
  */
 function block_culupcoming_events_get_user_img ($userid) {
@@ -328,6 +340,7 @@ function block_culupcoming_events_get_user_img ($userid) {
 
 /**
  * Get a site avatar
+ * 
  * @return string full image tag, possibly wrapped in a link.
  */
 function block_culupcoming_events_get_site_img () {
@@ -350,16 +363,17 @@ function block_culupcoming_events_get_site_img () {
 
 /**
  * Reload the events including newer ones via ajax call
+ * 
  * @param  int $courseid the course id
  * @param  int $lastdate the date of the last event loaded
  * @return array $events array of upcoming event events
  */
-function block_culupcoming_events_ajax_reload($courseid, $lastid) {
+function block_culupcoming_events_ajax_reload($lookahead, $courseid, $lastid) {
     global $DB;
 
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
     $output = array();
-    list($filtercourse, $events) = block_culupcoming_events_get_all_events($course);
+    list($filtercourse, $events) = block_culupcoming_events_get_all_events($lookahead, $course);
 
     if ($events !== false) {
         // Gets the cached stuff for the current course, others are checked below.

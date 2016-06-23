@@ -38,6 +38,7 @@ class block_culupcoming_events extends block_base {
      */
     public function init() {
         global $COURSE;
+
         if ($COURSE->id != SITEID) {
             $this->title = get_string('blocktitlecourse', 'block_culupcoming_events');
         } else {
@@ -46,6 +47,10 @@ class block_culupcoming_events extends block_base {
     }
 
     public function has_config() {
+        return true;
+    }
+
+    public function instance_allow_config() {
         return true;
     }
 
@@ -70,8 +75,17 @@ class block_culupcoming_events extends block_base {
             $limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
             $lastdate = 0;
             $lastid = 0;
+            $courseid = $COURSE->id;
+            $lookahead = $this->config->lookahead;
 
-            list($more, $events) = block_culupcoming_events_get_events($COURSE->id, $lastid, $lastdate, $limitfrom, $limitnum);
+            list($more, $events) = block_culupcoming_events_get_events(
+                $lookahead,
+                $courseid,
+                $lastid,
+                $lastdate,
+                $limitfrom,
+                $limitnum);
+
             $renderer = $this->page->get_renderer('block_culupcoming_events');
             $this->content->text = $renderer->culupcoming_events_reload();
             $this->content->text .= $renderer->culupcoming_events($events);
@@ -100,7 +114,7 @@ class block_culupcoming_events extends block_base {
             $this->page->requires->yui_module(
                 'moodle-block_culupcoming_events-scroll',
                 'M.block_culupcoming_events.scroll.init',
-                array(array('limitnum' => $limitnum, 'courseid' => $COURSE->id))
+                array(array('limitnum' => $limitnum, 'courseid' => $COURSE->id, 'lookahead' => $lookahead))
             );
 
             // Footer.

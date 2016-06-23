@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Admin settings for CUL Upcoming Events
+ * Instance settings for CUL Upcoming Events
  *
  * @package    block
  * @subpackage cupcoming_events
@@ -24,24 +24,21 @@
  *
  */
 
-defined('MOODLE_INTERNAL') || die;
+class block_culupcoming_events_edit_form extends block_edit_form {
 
-if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configtext(
-        'block_culupcoming_events/gravatar',
-        get_string('gravatardefaulturl', 'admin'),
-        get_string('gravatardefaulturl_help', 'admin'), 'mm'
-    ));
+    protected function specific_definition($mform) {
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
-    $options = array();
-    for ($i = 0; $i <= 365; $i++) {
-        $options[$i] = $i;
+        $options = array();
+
+        for ($i = 0; $i <= 365; $i++) {
+            $options[$i] = $i;
+        }
+
+        $default = get_config('block_culupcoming_events', 'lookahead');
+
+        $mform->addElement('select', 'config_lookahead', get_string('lookahead', 'block_culupcoming_events'), $options);
+        $mform->setDefault('config_lookahead', $default);
+        $mform->addHelpButton('config_lookahead', 'lookahead', 'block_culupcoming_events');
     }
-    $settings->add(new admin_setting_configselect(
-        'block_culupcoming_events/lookahead',
-        new lang_string('lookahead', 'block_culupcoming_events'),
-        new lang_string('lookahead_help', 'block_culupcoming_events'),
-        365,
-        $options
-    ));
 }

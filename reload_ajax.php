@@ -34,11 +34,12 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $lastid = required_param('lastid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
+$lookahead = required_param('lookahead', PARAM_INT);
 $list = '';
 $end = false;
 
 // Get more events.
-list($more, $events) = block_culupcoming_events_ajax_reload($courseid, $lastid);
+list($more, $events) = block_culupcoming_events_ajax_reload($lookahead, $courseid, $lastid);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 if ($events) {

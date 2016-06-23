@@ -29,6 +29,8 @@ M.block_culupcoming_events.scroll = {
     scroller: null,
     reloader: null,
     timer: null,
+    courseid: 0,
+    lookahead: 365,
 
     init: function(params) {
 
@@ -45,6 +47,7 @@ M.block_culupcoming_events.scroll = {
         this.scroller.on('scroll', this.filltobelowblock, this);
         this.limitnum = params.limitnum;
         this.courseid = params.courseid;
+        this.lookahead = params.lookahead;
         // Refresh the feed every 5 mins.
         this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
         this.filltobelowblock();
@@ -79,6 +82,8 @@ M.block_culupcoming_events.scroll = {
         var scrollHeight = this.scroller.get('scrollHeight');
         var scrollTop = this.scroller.get('scrollTop');
         var clientHeight = this.scroller.get('clientHeight');
+        var lastid;
+        var lastdate;
 
         if ((scrollHeight - (scrollTop + clientHeight)) < 10) {
             // Pause the automatic refresh
@@ -115,12 +120,13 @@ M.block_culupcoming_events.scroll = {
             limitnum: this.limitnum,
             lastid : lastid,
             lastdate : lastdate,
-            courseid: this.courseid
+            courseid: this.courseid,
+            lookahead: this.lookahead
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/scroll_ajax.php', {
             method: 'POST',
-            data: build_querystring(params),
+            data: window.build_querystring(params),
             context: this,
             on: {
                 success: function(id, e) {
@@ -163,12 +169,13 @@ M.block_culupcoming_events.scroll = {
         var params = {
             sesskey : M.cfg.sesskey,
             lastid : lastid,
-            courseid: this.courseid
+            courseid: this.courseid,
+            lookahead: this.lookahead
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/reload_ajax.php', {
             method: 'POST',
-            data: build_querystring(params),
+            data: window.build_querystring(params),
             context: this,
             on: {
                 success: function(id, e) {

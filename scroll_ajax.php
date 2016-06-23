@@ -38,11 +38,12 @@ $limitnum = required_param('limitnum', PARAM_INT);
 $lastdate = required_param('lastdate', PARAM_INT);
 $lastid = required_param('lastid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
+$lookahead = required_param('lookahead', PARAM_INT);
 $list = '';
 $end = false;
 
 // Get more events.
-list($more, $events) = block_culupcoming_events_get_events($courseid, $lastid, $lastdate, $limitfrom, $limitnum);
+list($more, $events) = block_culupcoming_events_get_events($lookahead, $courseid, $lastid, $lastdate, $limitfrom, $limitnum);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 if ($events) {
