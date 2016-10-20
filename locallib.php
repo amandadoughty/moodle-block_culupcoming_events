@@ -429,7 +429,7 @@ function block_culupcoming_events_ajax_reload($lookahead, $courseid, $lastid) {
                     if (!$cm = get_coursemodule_from_instance($event->modulename, $event->instance)) {
                         continue;
                     }
-                    if (!coursemodule_visible_for_user($cm)) {
+                    if (!\core_availability\info_module::is_user_visible($cm)) {
                         continue;
                     }
                 }

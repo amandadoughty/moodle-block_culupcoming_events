@@ -76,7 +76,12 @@ class block_culupcoming_events extends block_base {
             $lastdate = 0;
             $lastid = 0;
             $courseid = $COURSE->id;
-            $lookahead = $this->config->lookahead;
+
+            if(isset($this->config->lookahead)) {
+                $lookahead = $this->config->lookahead;
+            } else {
+                $lookahead = get_config('block_culupcoming_events', 'lookahead');
+            }
 
             list($more, $events) = block_culupcoming_events_get_events(
                 $lookahead,
