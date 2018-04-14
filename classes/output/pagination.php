@@ -100,7 +100,7 @@ class pagination implements templatable, renderable {
             $pagination->next->nexturl = new moodle_url($PAGE->url, array('block_culupcoming_events_page' => $next));
             $pagination->next->nexttext = get_string('later', 'block_culupcoming_events');
         }
-        return $pagination;
-    }    
 
+        return $pagination;
+    }
 }

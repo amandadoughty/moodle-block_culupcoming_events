@@ -24,8 +24,6 @@
  *
  */
 
-// require_once($CFG->dirroot.'/blocks/culupcoming_events/locallib.php');
-
 /**
  * block_culupcoming_events
  *
@@ -78,7 +76,7 @@ class block_culupcoming_events extends block_base {
             $lastid = 0;
             $courseid = $COURSE->id;
 
-            if(isset($this->config->lookahead)) {
+            if (isset($this->config->lookahead)) {
                 $lookahead = $this->config->lookahead;
             } else {
                 $lookahead = get_config('block_culupcoming_events', 'lookahead');
@@ -89,7 +87,7 @@ class block_culupcoming_events extends block_base {
                 $lastid,
                 $lastdate,
                 $limitfrom,
-                $limitnum, 
+                $limitnum,
                 $page
             );
 
@@ -101,8 +99,8 @@ class block_culupcoming_events extends block_base {
                 'M.block_culupcoming_events.scroll.init',
                 [[
                     'lookahead' => $lookahead,
-                    'courseid' => $courseid, 
-                    'limitnum' => $limitnum, 
+                    'courseid' => $courseid,
+                    'limitnum' => $limitnum,
                     'page' => $page
                 ]]
             );

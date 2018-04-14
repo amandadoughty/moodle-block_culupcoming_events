@@ -107,11 +107,9 @@ class course_picture implements templatable, renderable {
 
         if ($needrec) {
             $this->course = $DB->get_record('course', array('id' => $course->id), self::fields(), MUST_EXIST);
-        } else {
-            // $this->course = new \course_in_list($course);
         }
 
-        $this->course = new \course_in_list($course);        
+        $this->course = new \course_in_list($course);
     }
 
     /**
@@ -160,7 +158,7 @@ class course_picture implements templatable, renderable {
         // Then wrap it in link if needed.
         if ($this->link) {
             $courseimg['url'] = new \moodle_url('/course/view.php', array('id' => $course->id));
-        }        
+        }
 
         return $courseimg;
     }

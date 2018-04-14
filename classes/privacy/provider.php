@@ -23,13 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
- 
+
 namespace culupcoming_events\privacy;
- 
-class provider implements 
+
+class provider implements
     // This plugin does not store any personal user data.
     \core_privacy\local\metadata\null_provider {
- 
+
     /**
      * Get the language string identifier with the component's language
      * file to explain why this plugin stores no data.

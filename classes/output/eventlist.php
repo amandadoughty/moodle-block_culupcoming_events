@@ -37,9 +37,39 @@ defined('MOODLE_INTERNAL') || die();
 
 class eventlist implements templatable, renderable {
     /**
-     * @var string The tab to display.
+     * @var int The number of days to look ahead.
      */
-    // public $events;
+    public $lookahead;
+
+    /**
+     * @var int The course id.
+     */
+    public $courseid;
+
+    /**
+     * @var int The id of the last event.
+     */
+    public $lastid;
+
+    /**
+     * @var int The date of the last event.
+     */
+    public $lastdate;
+
+    /**
+     * @var int The event number to start from.
+     */
+    public $limitfrom;
+
+    /**
+     * @var int  The number of events to show.
+     */
+    public $limitnum;
+
+    /**
+     * @var int The current page if JS is disabled.
+     */
+    public $page;
 
     /**
      * Constructor.
@@ -53,8 +83,7 @@ class eventlist implements templatable, renderable {
         $lastdate,
         $limitfrom,
         $limitnum,
-        $page) 
-    {
+        $page) {
         $this->lookahead = $lookahead;
         $this->courseid = $courseid;
         $this->lastid = $lastid;
@@ -125,10 +154,10 @@ class eventlist implements templatable, renderable {
 
         // Maximum number of events to be displayed on upcoming view.
         $defaultmaxevents = CALENDAR_DEFAULT_UPCOMING_MAXEVENTS;
+
         if (isset($CFG->calendar_maxevents)) {
             $defaultmaxevents = intval($CFG->calendar_maxevents);
         }
-
 
         $tstart = $type->convert_to_timestamp($calendardate['year'], $calendardate['mon'], $calendardate['mday'],
                 $calendardate['hours']);
@@ -140,24 +169,24 @@ class eventlist implements templatable, renderable {
         $tend = $date->getTimestamp();
 
         list($userparam, $groupparam, $courseparam, $categoryparam) = array_map(function($param) {
-                // If parameter is true, return null.
-                if ($param === true) {
-                    return null;
-                }
+            // If parameter is true, return null.
+            if ($param === true) {
+                return null;
+            }
 
-                // If parameter is false, return an empty array.
-                if ($param === false) {
-                    return [];
-                }
+            // If parameter is false, return an empty array.
+            if ($param === false) {
+                return [];
+            }
 
-                // If the parameter is a scalar value, enclose it in an array.
-                if (!is_array($param)) {
-                    return [$param];
-                }
+            // If the parameter is a scalar value, enclose it in an array.
+            if (!is_array($param)) {
+                return [$param];
+            }
 
-                // No normalisation required.
-                return $param;
-            }, 
+            // No normalisation required.
+            return $param;
+        },
             [$calendar->users, $calendar->groups, $calendar->courses, $calendar->categories]
         );
 
@@ -198,7 +227,7 @@ class eventlist implements templatable, renderable {
             'type' => $type,
         ];
 
-        $data = [];     
+        $data = [];
         $upcoming = new \core_calendar\external\calendar_upcoming_exporter($calendar, $related);
         $data = $upcoming->export($renderer);
 
@@ -372,9 +401,8 @@ class eventlist implements templatable, renderable {
             $coursepic->link = true;
             $coursepic->class = 'coursepicture';
             $templatecontext = $coursepic->export_for_template($this->output);
-            // get_user_img returns html and we need to be consistent.
+            // The get_user_img returns html and we need to be consistent.
             $courseimg = $this->output->render_from_template('block_culupcoming_events/course_picture', $templatecontext);
-
         }
 
         return $courseimg;
@@ -431,40 +459,5 @@ class eventlist implements templatable, renderable {
         $siteimg = $this->get_user_img($adminuserid);
 
         return $siteimg;
-    }
-
-    /**
-     * Reload the events including newer ones via ajax call
-     * 
-     * @param  int $courseid the course id
-     * @param  int $lastdate the date of the last event loaded
-     * @return array $events array of upcoming event events
-     */
-    public function ajax_reload($lookahead, $courseid, $lastid) {
-        global $DB;
-     
-        $output = [];
-        $more = false;
-
-        // We need a subset of the events and we cannot use timestartafterevent because we want to be able to page forward
-        // and backwards. So we retrieve all the events for previous and current page plus one to check if there are more to
-        // page through.
-        $eventnum = $limitnum + 1;
-        $events = $this->get_events($lookahead, $courseid, 0, $lastid, $eventnum);
-print_r($events);
-        if ($events !== false) {
-            if (count($events) > ($limitnum)) {
-                $more = true;
-                // Get rid of the extra one used to test for more.
-                array_pop($events);
-            }
-
-            foreach ($events as $key => $event) {
-                $event = $this->add_event_metadata($event);
-                $output[] = $event;
-            }
-        }
-
-        return [$more, $output];
     }
 }

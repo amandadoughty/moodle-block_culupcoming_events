@@ -41,37 +41,37 @@ defined('MOODLE_INTERNAL') || die();
  */
 class main implements templatable, renderable {
     /**
-     * @var string The tab to display.
+     * @var int The number of days to look ahead.
      */
     public $lookahead;
 
     /**
-     * @var string The tab to display.
+     * @var int The course id.
      */
     public $courseid;
 
     /**
-     * @var string The tab to display.
+     * @var int The id of the last event.
      */
     public $lastid;
 
     /**
-     * @var string The tab to display.
+     * @var int The date of the last event.
      */
     public $lastdate;
 
-            /**
-     * @var string The tab to display.
+    /**
+     * @var int The event number to start from.
      */
     public $limitfrom;
 
     /**
-     * @var string The tab to display.
+     * @var int  The number of events to show.
      */
-    public $limitnum;    
+    public $limitnum;
 
     /**
-     * @var string The tab to display.
+     * @var int The current page if JS is disabled.
      */
     public $page;
 
@@ -86,9 +86,8 @@ class main implements templatable, renderable {
         $lastid,
         $lastdate,
         $limitfrom,
-        $limitnum, 
-        $page) 
-    {
+        $limitnum,
+        $page) {
         $this->lookahead = $lookahead;
         $this->courseid = $courseid;
         $this->lastid = $lastid;
