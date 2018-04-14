@@ -27,23 +27,38 @@
 define('AJAX_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__) . '/locallib.php');
+require_once(dirname(__FILE__) . '/../../calendar/lib.php');
+
+use block_culupcoming_events\output\eventlist;
 
 require_sesskey();
 require_login();
 $PAGE->set_context(context_system::instance());
-$lastid = required_param('lastid', PARAM_INT);
-$courseid = required_param('courseid', PARAM_INT);
 $lookahead = required_param('lookahead', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
+$limitnum = required_param('limitnum', PARAM_INT);
+$page = required_param('page', PARAM_INT);
+$limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
 $list = '';
 $end = false;
-
-// Get more events.
-list($more, $events) = block_culupcoming_events_ajax_reload($lookahead, $courseid, $lastid);
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
+$events = new eventlist(
+            $lookahead,
+            $courseid,
+            0,
+            0,
+            $limitfrom,
+            $limitnum,
+            $page
+        );
+
+$templatecontext = $events->export_for_template($renderer);
+$events = $templatecontext['events'];
+$more = $templatecontext['pagination'];
+
 if ($events) {
-    $list .= $renderer->culupcoming_events_items ($events);
+    $list .= $renderer->render_from_template('block_culupcoming_events/eventlist', ['events' => $events]);
 }
 
 if (!$more) {

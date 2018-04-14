@@ -25,12 +25,13 @@
 M.block_culupcoming_events = M.block_culupcoming_events || {};
 M.block_culupcoming_events.scroll = {
 
+    lookahead: 365,
+    courseid: 0,
     limitnum: null,
+    page: 0,
     scroller: null,
     reloader: null,
     timer: null,
-    courseid: 0,
-    lookahead: 365,
 
     init: function(params) {
 
@@ -38,16 +39,25 @@ M.block_culupcoming_events.scroll = {
             Y.one('.pages').hide();
         }
 
-        var reloaddiv = Y.one('.block_culupcoming_events .reload');
-        var h2 = Y.one('.block_culupcoming_events .header .title h2');
-        h2.append(reloaddiv);
-        reloaddiv.setStyle('display', 'inline-block');
-        Y.one('.reload .block_culupcoming_events_reload').on('click', this.reloadblock, this);
+        try {
+            var reloaddiv = Y.one('.block_culupcoming_events .reload');
+            var block = Y.one('.block_culupcoming_events');
+            var id = block.get('id');
+            id = id.replace('inst', '');
+            var h2 = Y.one('#instance-' + id + '-header');
+            h2.append(reloaddiv);
+            reloaddiv.setStyle('display', 'inline-block');
+            Y.one('.reload .block_culupcoming_events_reload').on('click', this.reloadblock, this);
+        } catch (e) {
+            Y.log('Problem adding reload button');
+        }
+
         this.scroller = Y.one('.block_culupcoming_events .culupcoming_events');
         this.scroller.on('scroll', this.filltobelowblock, this);
-        this.limitnum = params.limitnum;
-        this.courseid = params.courseid;
         this.lookahead = params.lookahead;
+        this.courseid = params.courseid;
+        this.limitnum = params.limitnum;
+        this.page = params.page;
         // Refresh the feed every 5 mins.
         this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
         this.filltobelowblock();
@@ -60,16 +70,20 @@ M.block_culupcoming_events.scroll = {
             Y.Array.each(dock.dockeditems, function(dockeditem) {
                 dockeditem.on('dockeditem:showcomplete', function() {
                     if (dockeditem.get('blockclass') === 'culupcoming_events') {
-                        var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                        if (!reloader) {
-                            var reloaddiv = Y.one('.block_culupcoming_events .reload').cloneNode(true);
-                            var h2 = Y.one('#instance-' + dockeditem.get('blockinstanceid') + '-header' );
-                            h2.append(reloaddiv);
-                            reloaddiv.setStyle('display', 'inline-block');
-                            reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                        }
-                        if (reloader) {
-                            reloader.on('click', this.reloadblock, this);
+                        try {
+                            var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
+                            if (!reloader) {
+                                var reloaddiv = Y.one('.block_culupcoming_events .reload').cloneNode(true);
+                                var h2 = Y.one('#instance-' + dockeditem.get('blockinstanceid') + '-header' );
+                                h2.append(reloaddiv);
+                                reloaddiv.setStyle('display', 'inline-block');
+                                reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
+                            }
+                            if (reloader) {
+                                reloader.on('click', this.reloadblock, this);
+                            }
+                        } catch (e) {
+                            Y.log('Problem adding reload button');
                         }
                     }
                 },this);
@@ -116,12 +130,13 @@ M.block_culupcoming_events.scroll = {
 
         var params = {
             sesskey : M.cfg.sesskey,
-            limitfrom: 0,
-            limitnum: this.limitnum,
+            lookahead: this.lookahead,
+            courseid: this.courseid,
             lastid : lastid,
             lastdate : lastdate,
-            courseid: this.courseid,
-            lookahead: this.lookahead
+            limitfrom: 1,
+            limitnum: this.limitnum,
+            page: this.page
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/scroll_ajax.php', {
@@ -168,9 +183,10 @@ M.block_culupcoming_events.scroll = {
 
         var params = {
             sesskey : M.cfg.sesskey,
-            lastid : lastid,
+            lookahead: this.lookahead,
             courseid: this.courseid,
-            lookahead: this.lookahead
+            limitnum : this.limitnum,
+            page : this.page
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/reload_ajax.php', {

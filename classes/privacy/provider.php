@@ -15,19 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for CUL Upcoming Events block
+ * Privacy provider for culupcoming_events block.
  *
  * @package    block
  * @subpackage culupcoming_events
- * @copyright  2013 Tim Gagen <Tim.Gagen.1@city.ac.uk>
+ * @copyright  2013 Amanda Doughty <amanda.doughty.1@city.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2018041400;  // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;  // Requires this Moodle version.
-$plugin->component = 'block_culupcoming_events'; // Full name of the plugin (used for diagnostics).
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = '3.0.0 (Build: 2018041400)';
+ 
+namespace culupcoming_events\privacy;
+ 
+class provider implements 
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider {
+ 
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

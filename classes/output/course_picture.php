@@ -13,122 +13,30 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Classes representing HTML elements, used by $OUTPUT methods
+ * CUL Course Format Information
  *
- * Please see http://docs.moodle.org/en/Developement:How_Moodle_outputs_HTML
- * for an overview.
+ * A collapsed format that solves the issue of the 'Scroll of Death' when a course has many sections. All sections
+ * except zero have a toggle that displays that section. One or more sections can be displayed at any given time.
+ * Toggles are persistent on a per browser session per course basis but can be made to persist longer.
  *
- * @package    block
- * @subpackage culactivity_stream
- * @copyright 2014 Amanda Doughty
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block/culupcoming_events
+ * @version    See the value of '$plugin->version' in below.
+ * @author     Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
+ *
  */
+
+namespace block_culupcoming_events\output;
+
+use renderer_base;
+use renderable;
+use templatable;
+use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
-class block_culupcoming_events_renderers_course_picture_renderer extends plugin_renderer_base {
-
-    /**
-     * Returns HTML to display the specified course's avatar.
-     *
-     * Course avatar may be obtained in two ways:
-     * <pre>
-     * // Option 1: (shortcut for simple cases, preferred way)
-     * // $course has come from the DB and has fields id
-     * $OUTPUT->course_picture($course, array('popup'=>true));
-     *
-     * // Option 2:
-     * $coursepic = new course($course);
-     * // Set properties of $coursepic
-     * $coursepic->popup = true;
-     * $OUTPUT->render($coursepic);
-     * </pre>
-     *
-     * @param stdClass $course Object with at least fields id, picture, imagealt, firstname, lastname
-     *     If any of these are missing, the database is queried. Avoid this
-     *     if at all possible, particularly for reports. It is very bad for performance.
-     * @param array $options associative array with course picture options, used only if not a course_picture object,
-     *     options are:
-     *     - size=35 (size of image)
-     *     - link=true (make image clickable - the link leads to course)
-     *     - popup=false (open in popup)
-     *     - alttext=true (add image alt attribute)
-     *     - class = image class attribute (default 'coursepicture')
-     * @return string HTML fragment
-     */
-    public function block_culupcoming_events_course_picture(stdClass $course, array $options = null) {
-        $coursepicture = new course_picture($course);
-        foreach ((array)$options as $key => $value) {
-            if (array_key_exists($key, $coursepicture)) {
-                $coursepicture->$key = $value;
-            }
-        }
-        return $this->render($coursepicture);
-    }
-
-    /**
-     * Internal implementation of course image rendering.
-     *
-     * @param course_picture $coursepicture
-     * @return string
-     */
-    protected function render_block_culupcoming_events_course_picture(block_culupcoming_events_course_picture $coursepicture) {
-        global $CFG, $DB;
-
-        $course = $coursepicture->course;
-        $coursedisplayname = $course->shortname;
-
-        if ($coursepicture->alttext) {
-            $alt = get_string('pictureof', '', $coursedisplayname);
-        } else {
-            $alt = '';
-        }
-
-        if (empty($coursepicture->size)) {
-            $size = 35;
-        } else if ($coursepicture->size === true or $coursepicture->size == 1) {
-            $size = 100;
-        } else {
-            $size = $coursepicture->size;
-        }
-
-        $class = $coursepicture->class;
-        $src = $coursepicture->get_url($this->page, $this);
-        $attributes = array('src' => $src, 'alt' => $alt, 'title' => $alt, 'class' => $class);
-
-        // Get the image html output first.
-        $output = html_writer::empty_tag('img', $attributes);;
-
-        // Then wrap it in link if needed.
-        if (!$coursepicture->link) {
-            return $output;
-        }
-
-        $url = new moodle_url('/course/view.php', array('id' => $course->id));
-        $attributes = array('href' => $url);
-
-        if ($coursepicture->popup) {
-            $id = html_writer::random_id('coursepicture');
-            $attributes['id'] = $id;
-            $this->add_action_handler(new popup_action('click', $url), $id);
-        }
-
-        return html_writer::tag('a', $output, $attributes);
-    }
-};
-
-/**
- * Data structure representing a course picture.
- *
- * @copyright 2014 Amanda Doughty
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Modle 2.6
- * @package local
- * @category culoutput
- */
-class block_culupcoming_events_course_picture implements renderable {
+class course_picture implements templatable, renderable {
     /**
      * @var array List of mandatory fields in user record here. (do not include
      * TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
@@ -167,7 +75,7 @@ class block_culupcoming_events_course_picture implements renderable {
     /**
      * @var string Image class attribute
      */
-    public $class = 'coursepicture';
+    public $class = 'this';
 
     /**
      * Course picture constructor.
@@ -175,7 +83,7 @@ class block_culupcoming_events_course_picture implements renderable {
      * @param stdClass $course course record with at least id, picture, imagealt, coursename set.
      *                 It is recommended to add also contextid of the course for performance reasons.
      */
-    public function __construct(stdClass $course) {
+    public function __construct(\stdClass $course) {
         global $CFG, $DB;
 
         require_once($CFG->libdir.'/coursecatlib.php');
@@ -186,6 +94,7 @@ class block_culupcoming_events_course_picture implements renderable {
 
         // Only touch the DB if we are missing data and complain loudly.
         $needrec = false;
+
         foreach (self::$fields as $field) {
             if (!array_key_exists($field, $course)) {
                 $needrec = true;
@@ -199,10 +108,62 @@ class block_culupcoming_events_course_picture implements renderable {
         if ($needrec) {
             $this->course = $DB->get_record('course', array('id' => $course->id), self::fields(), MUST_EXIST);
         } else {
-            $this->course = new course_in_list($course);
+            // $this->course = new \course_in_list($course);
         }
+
+        $this->course = new \course_in_list($course);        
     }
 
+    /**
+     * Export this data so it can be used as the context for a mustache template.
+     *
+     * @param \renderer_base $output
+     * @return stdClass
+     */
+    public function export_for_template(renderer_base $output) {
+        $this->output = $output;
+        $courseimg = $this->get_course_picture();
+
+        return $courseimg;
+    }
+
+    /**
+     * Internal implementation of course image rendering.
+     *
+     * @param course_picture $this
+     * @return string
+     */
+    protected function get_course_picture() {
+        global $CFG, $DB, $PAGE;
+
+        $course = $this->course;
+        $coursedisplayname = $course->shortname;
+
+        if ($this->alttext) {
+            $alt = get_string('pictureof', '', $coursedisplayname);
+        } else {
+            $alt = '';
+        }
+
+        if (empty($this->size)) {
+            $size = 35;
+        } else if ($this->size === true or $this->size == 1) {
+            $size = 100;
+        } else {
+            $size = $this->size;
+        }
+
+        $class = $this->class;
+        $src = $this->get_url($PAGE, $this->output);
+        $courseimg = ['src' => $src, 'alt' => $alt, 'title' => $alt, 'class' => $class];
+
+        // Then wrap it in link if needed.
+        if ($this->link) {
+            $courseimg['url'] = new \moodle_url('/course/view.php', array('id' => $course->id));
+        }        
+
+        return $courseimg;
+    }
 
     /**
      * Works out the URL for the course picture.
@@ -214,7 +175,7 @@ class block_culupcoming_events_course_picture implements renderable {
      * @param renderer_base $renderer
      * @return moodle_url
      */
-    public function get_url(moodle_page $page, renderer_base $renderer = null) {
+    public function get_url(\moodle_page $page, renderer_base $renderer = null) {
         global $CFG, $DB;
 
         $config = get_config('block_culupcoming_events');
@@ -267,7 +228,6 @@ class block_culupcoming_events_course_picture implements renderable {
                     return $url;
                 }
             }
-
         } else if ($CFG->enablegravatar) {
             // Normalise the size variable to acceptable bounds.
             if ($size < 1 || $size > 512) {

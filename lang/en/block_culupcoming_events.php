@@ -39,6 +39,7 @@ that an event has to start in in order to be displayed as an upcoming event. Eve
 that start beyond this will never be displayed as upcoming. Selecting 0 will result
 in only todays events displaying';
 $string['nomoreevents'] = 'No more events';
+$string['privacy:metadata'] = 'The CUL Upcoming Events block only displays existing calendar data.';
 $string['reload'] = 'Refresh Feed';
 $string['second'] = 'second';
 $string['sooner'] = 'Sooner';

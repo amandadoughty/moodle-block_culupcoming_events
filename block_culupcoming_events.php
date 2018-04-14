@@ -24,7 +24,7 @@
  *
  */
 
-require_once($CFG->dirroot.'/blocks/culupcoming_events/locallib.php');
+// require_once($CFG->dirroot.'/blocks/culupcoming_events/locallib.php');
 
 /**
  * block_culupcoming_events
@@ -70,51 +70,41 @@ class block_culupcoming_events extends block_base {
         if (empty($this->instance)) {
             return $this->content;
         } else {
+            // Extra params for reloading and scrolling.
             $limitnum = 7;
             $page = optional_param('block_culupcoming_events_page', 1, PARAM_RAW);
             $limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
             $lastdate = 0;
             $lastid = 0;
             $courseid = $COURSE->id;
-            $lookahead = $this->config->lookahead;
 
-            list($more, $events) = block_culupcoming_events_get_events(
-                $lookahead,
+            if(isset($this->config->lookahead)) {
+                $lookahead = $this->config->lookahead;
+            } else {
+                $lookahead = get_config('block_culupcoming_events', 'lookahead');
+            }
+
+            $renderable = new \block_culupcoming_events\output\main($lookahead,
                 $courseid,
                 $lastid,
                 $lastdate,
                 $limitfrom,
-                $limitnum);
+                $limitnum, 
+                $page
+            );
 
             $renderer = $this->page->get_renderer('block_culupcoming_events');
-            $this->content->text = $renderer->culupcoming_events_reload();
-            $this->content->text .= $renderer->culupcoming_events($events);
-
-            $prev = false;
-            $next = false;
-
-            if ($page > 1) {
-                // Add a 'sooner' link.
-                $prev = $page - 1;
-            }
-
-            if ($more) {
-                // Add an 'later' link.
-                $next = $page + 1;
-            }
-
-            $this->content->text .= $renderer->culupcoming_events_pagination($prev, $next);
-
-            if (empty($this->content->text)) {
-                $this->content->text = html_writer::tag('div',
-                                                        get_string('noupcomingevents', 'calendar'),
-                                                        array('class' => 'post', 'style' => 'margin-left: 1em'));
-            }
+            $this->content->text = $renderer->render($renderable);
 
             $this->page->requires->yui_module(
                 'moodle-block_culupcoming_events-scroll',
                 'M.block_culupcoming_events.scroll.init',
-                array(array('limitnum' => $limitnum, 'courseid' => $COURSE->id, 'lookahead' => $lookahead))
+                [[
+                    'lookahead' => $lookahead,
+                    'courseid' => $courseid, 
+                    'limitnum' => $limitnum, 
+                    'page' => $page
+                ]]
             );
 
             // Footer.
