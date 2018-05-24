@@ -13,14 +13,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Strings for component 'block_culupcoming_events', language 'en'
+ * CUL upcoming events block
  *
- * @package    block
- * @subpackage culupcoming_events
- * @copyright  2013 Tim Gagen <Tim.Gagen.1@city.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Language strings.
+ *
+ * @package    block/culupcoming_events
+ * @copyright  Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
 

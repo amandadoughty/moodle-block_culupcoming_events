@@ -18,8 +18,8 @@
  * Scroll functionality.
  *
  * @package   block_culupcoming_events
- * @copyright 2014 onwards Amanda Doughty
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2013 onwards Amanda Doughty
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
 M.block_culupcoming_events = M.block_culupcoming_events || {};
@@ -34,7 +34,6 @@ M.block_culupcoming_events.scroll = {
     timer: null,
 
     init: function(params) {
-
         if (Y.one('.pages')) {
             Y.one('.pages').hide();
         }
@@ -100,7 +99,7 @@ M.block_culupcoming_events.scroll = {
         var lastdate;
 
         if ((scrollHeight - (scrollTop + clientHeight)) < 10) {
-            // Pause the automatic refresh
+            // Pause the automatic refresh.
             this.timer.cancel();
             var num = Y.all('.block_culupcoming_events .culupcoming_events li').size();
             if (num > 0) {
@@ -112,7 +111,7 @@ M.block_culupcoming_events.scroll = {
                 lastdate = 0;
             }
             this.addevents(num, lastid, lastdate);
-            // Start the automatic refresh again now we have the correct last item
+            // Start the automatic refresh again now we have the correct last item.
             this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
         }
     },
@@ -123,7 +122,7 @@ M.block_culupcoming_events.scroll = {
     },
 
     addevents: function(num, lastid, lastdate) {
-        // disable the scroller until this completes
+        // Disable the scroller until this completes.
         this.scroller.detach('scroll');
         Y.one('.block_culupcoming_events_reload').setStyle('display', 'none');
         Y.one('.block_culupcoming_events_loading').setStyle('display', 'inline-block');
@@ -152,7 +151,7 @@ M.block_culupcoming_events.scroll = {
                     } else {
                         Y.one('.block_culupcoming_events .culupcoming_events ul').append(data.output);
                     }
-                    // renable the scroller if there are more events
+                    // Renable the scroller if there are more events.
                     if (!data.end) {
                         this.scroller.on('scroll', this.filltobelowblock, this);
                     }
@@ -160,7 +159,7 @@ M.block_culupcoming_events.scroll = {
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                 },
                 failure: function() {
-                    // error message
+                    // Error message.
                     Y.log('addevents failed');
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
@@ -210,7 +209,7 @@ M.block_culupcoming_events.scroll = {
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                 },
                 failure: function() {
-                    // error message
+                    // Error message.
                     Y.log('reloadevents failed');
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');

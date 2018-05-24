@@ -13,14 +13,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Infinite scrolling functionality for culupcoming_events block.
+ * CUL upcoming events block
  *
- * @package    block
- * @subpackage culupcoming_events
- * @copyright  2013 Amanda Doughty <amanda.doughty.1@city.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Appends events asynchronously on scroll.
+ *
+ * @package    block/culupcoming_events
+ * @copyright  Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
 
@@ -33,6 +33,7 @@ use block_culupcoming_events\output\eventlist;
 
 require_sesskey();
 require_login();
+
 $PAGE->set_context(context_system::instance());
 $lookahead = required_param('lookahead', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
@@ -40,8 +41,6 @@ $lastid = required_param('lastid', PARAM_INT);
 $limitfrom = required_param('limitfrom', PARAM_INT);
 $limitnum = required_param('limitnum', PARAM_INT);
 $page = required_param('page', PARAM_INT);
-
-
 $list = '';
 $end = false;
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
@@ -69,4 +68,4 @@ if (!$more) {
     $end = true;
 }
 
-echo json_encode(array('output' => $list, 'end' => $end));
+echo json_encode(['output' => $list, 'end' => $end]);

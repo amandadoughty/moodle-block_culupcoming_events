@@ -13,14 +13,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Reloading functionality for culupcoming_events block.
+ * CUL upcoming events block
  *
- * @package    block
- * @subpackage culupcoming_events
- * @copyright  2013 Amanda Doughty <amanda.doughty.1@city.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Reloads the events asynchronously.
+ *
+ * @package    block/culupcoming_events
+ * @copyright  Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
 
@@ -33,6 +33,7 @@ use block_culupcoming_events\output\eventlist;
 
 require_sesskey();
 require_login();
+
 $PAGE->set_context(context_system::instance());
 $lookahead = required_param('lookahead', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
@@ -66,4 +67,4 @@ if (!$more) {
     $end = true;
 }
 
-echo json_encode(array('output' => $list, 'end' => $end));
+echo json_encode(['output' => $list, 'end' => $end]);

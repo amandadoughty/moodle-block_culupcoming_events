@@ -13,17 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Class containing data for CUL Upcoming Events block.
+ * CUL upcoming events block
+ *
+ * Pagination renderable.
  *
  * @package    block/culupcoming_events
- * @version    See the value of '$plugin->version' in below.
- * @author     Amanda Doughty
+ * @copyright  Amanda Doughty
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
-
 namespace block_culupcoming_events\output;
 
 use renderer_base;
@@ -34,27 +33,22 @@ use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Class containing data for CUL Upcoming Events block.
- *
- * @author     Amanda Doughty
- * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
- */
 class pagination implements templatable, renderable {
     /**
-     * @var string The tab to display.
+     * @var bool whether or not there are previous pages.
      */
     public $prev;
 
     /**
-     * @var string The tab to display.
+     * @var bool whether or not there are following pages.
      */
     public $next;
 
     /**
      * Constructor.
      *
-     * @param string $tab The tab to display.
+     * @param bool $prev
+     * @param bool $next
      */
     public function __construct($prev, $next) {
         $this->prev = $prev;
@@ -77,17 +71,18 @@ class pagination implements templatable, renderable {
      * Function to create the pagination. This will only show up for non-js
      * enabled browsers.
      *
-     * @param int $prev the previous page number
-     * @param int $next the next page number
-     * @return string $output html
+     * @param bool $prev whether or not there are previous pages
+     * @param bool $next whether or not there are following pages
+     * @return stdClass
      */
     public function get_pagination($prev = false, $next = false) {
         global $PAGE;
 
         $pagination = new stdClass();
+
         if ($prev) {
             $pagination->prev = new stdClass();
-            $pagination->prev->prevurl = new moodle_url($PAGE->url, array('block_culupcoming_events_page' => $prev));
+            $pagination->prev->prevurl = new moodle_url($PAGE->url, ['block_culupcoming_events_page' => $prev]);
             $pagination->prev->prevtext = get_string('sooner', 'block_culupcoming_events');
         }
         if ($prev && $next) {
@@ -97,7 +92,7 @@ class pagination implements templatable, renderable {
         }
         if ($next) {
             $pagination->next = new stdClass();
-            $pagination->next->nexturl = new moodle_url($PAGE->url, array('block_culupcoming_events_page' => $next));
+            $pagination->next->nexturl = new moodle_url($PAGE->url, ['block_culupcoming_events_page' => $next]);
             $pagination->next->nexttext = get_string('later', 'block_culupcoming_events');
         }
 

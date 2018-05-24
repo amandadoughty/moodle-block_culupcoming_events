@@ -15,11 +15,11 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_culupcoming_events/culupcoming_events
+    @template block_culupcoming_events/main
 
     CUL Upcoming Events view.
 
-    The purpose of this template is to render the CUL Upcoming Events view.
+    The purpose of this template is to render the CUL Upcoming Events block.
 
     Classes required for JS:
     * none
@@ -44,10 +44,8 @@
     {{> block_culupcoming_events/eventlist}}    
 </div>
 {{> block_culupcoming_events/pagination}}
-{{#isloggedin}}
 {{#js}}
 require(['jquery', 'core_calendar/calendar_view'], function($, CalendarView) {
-    CalendarView.init($("#calendar-upcoming-block-{{uniqid}}"), 'upcoming');
+    CalendarView.init($("#culupcoming-events-{{uniqid}}"), 'upcoming');
 });
 {{/js}}
-{{/isloggedin}}
