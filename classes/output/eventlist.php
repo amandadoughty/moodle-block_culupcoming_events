@@ -154,27 +154,15 @@ class eventlist implements templatable, renderable {
 
         // Calculate the bounds of the month.
         $calendardate = $type->timestamp_to_date_array($calendar->time);
-
         $date = new \DateTime('now', \core_date::get_user_timezone_object(99));
 
-        // Number of days in the future that will be used to fetch events.
-        // if (isset($CFG->calendar_lookahead)) {
-        //     $defaultlookahead = intval($CFG->calendar_lookahead);
-        // } else {
-        //     $defaultlookahead = CALENDAR_DEFAULT_UPCOMING_LOOKAHEAD;
-        // }
-        // $lookahead = get_user_preferences('calendar_lookahead', $defaultlookahead);
+        $tstart = $type->convert_to_timestamp(
+            $calendardate['year'],
+            $calendardate['mon'],
+            $calendardate['mday'],
+            $calendardate['hours']
+        );
 
-        // // Maximum number of events to be displayed on upcoming view.
-        // $defaultmaxevents = CALENDAR_DEFAULT_UPCOMING_MAXEVENTS;
-
-        // if (isset($CFG->calendar_maxevents)) {
-        //     $defaultmaxevents = intval($CFG->calendar_maxevents);
-        // }
-
-
-        $tstart = $type->convert_to_timestamp($calendardate['year'], $calendardate['mon'], $calendardate['mday'],
-                $calendardate['hours']);
         $date->setTimestamp($tstart);
         $date->modify('+' . $lookahead . ' days');
 

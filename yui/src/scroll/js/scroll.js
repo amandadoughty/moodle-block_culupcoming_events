@@ -202,7 +202,6 @@ M.block_culupcoming_events.scroll = {
                 },
                 end: function() {
                     Y.fire('culcourse-upcomingevents:reloadevents', {
-                        
                     });
                 }
             }
