@@ -13,13 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Class containing data for CUL Upcoming Events block.
+ * CUL upcoming events block
+ *
+ * Main renderable.
  *
  * @package    block/culupcoming_events
- * @version    See the value of '$plugin->version' in below.
- * @author     Amanda Doughty
+ * @copyright  Amanda Doughty
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
@@ -33,12 +33,6 @@ use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Class containing data for CUL Upcoming Events block.
- *
- * @author     Amanda Doughty
- * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
- */
 class main implements templatable, renderable {
     /**
      * @var int The number of days to look ahead.
@@ -78,7 +72,13 @@ class main implements templatable, renderable {
     /**
      * Constructor.
      *
-     * @param string $tab The tab to display.
+     * @param int $lookahead
+     * @param int $courseid
+     * @param int $lastid
+     * @param int $lastdate
+     * @param int $limitfrom
+     * @param int $limitnum
+     * @param int $page
      */
     public function __construct(
         $lookahead,
@@ -101,7 +101,7 @@ class main implements templatable, renderable {
      * Export this data so it can be used as the context for a mustache template.
      *
      * @param \renderer_base $output
-     * @return stdClass
+     * @return array
      */
     public function export_for_template(renderer_base $output) {
         global $PAGE;

@@ -25,69 +25,42 @@
     * none
 
     Data attributes required for JS:
-    * none
+    * data-region data-action
 
     Example context (json):
     {
     }
 }}
 
-<div{{!
-    }} class="event"{{!
-    }} data-eventtype-{{calendareventtype}}="1"{{!
-    }} data-region="event-item"{{!
-}}>
-<!--     <span>{{#icon}}{{#pix}} {{key}}, {{component}}, {{alttext}} {{/pix}}{{/icon}}</span>
-    <a{{!
-        }} data-type="event"{{!
-        }} data-action="view-event"{{!
-        }} data-event-id="{{id}}"{{!
-        }} href="{{viewurl}}"{{!
-    }}>{{{name}}}</a>
-    <div class="date">{{{formattedtime}}}</div>
-    <hr>
-
-    <div class="event" data-eventtype-user="1" data-region="event-item">
-        <span>
-            <i class="icon fa fa-user fa-fw " aria-hidden="true" title="User event" aria-label="User event">
-                
-            </i>
-        </span>
-        <a data-type="event" data-action="view-event" data-event-id="107" href="http://moodle2xgit.localhost/calendar/view.php?view=day&amp;course=1&amp;time=1523684700#event_107">
-            New Event
-        </a>
-        <div class="date">
-            <a href="http://moodle2xgit.localhost/calendar/view.php?view=day&amp;time=1523684700">
-            Tomorrow
-        </a>, 6:45 AM
+<li id="{{id}}_{{timestart}}">
+    <!-- <div class="clearfix notifictionitem"> -->
+    <div{{!
+        }} class="event clearfix"{{!
+        }} data-eventtype-{{calendareventtype}}="1"{{!
+        }} data-region="event-item"{{!
+    }}>
+        <div class="avatar">
+            {{{img}}}
+        </div>
+        <div class="notificationtext">
+            <a{{!
+                }} data-type="event"{{!
+                }} data-action="view-event"{{!
+                }} data-event-id="{{id}}"{{!
+                }} href="{{viewurl}}"{{!
+            }}>{{{description}}}</a>
+            {{{formattedtime}}}
+        </div>
+        <div class="activityicon">
+            {{#icon}}{{#pix}} {{key}}, {{component}}, {{alttext}} {{/pix}}{{/icon}}
+        </div>
     </div>
-    <hr> -->
+    <div class="meta">
+        <span class="timeuntil">{{timeuntil}}</span>
+        <a class="contexturls" href="{{viewurl}}">
+            Visit
+        </a>
+    </div>
+</li>
+</hr>
 
-    <li id="{{id}}_{{timestart}}">
-        <div class="clearfix notifictionitem">
-            <div class="avatar">
-                {{{img}}}
-            </div>
-            <div class="notificationtext">
-                <span>
-                    {{description}} {{{formattedtime}}}
-                </span>
-            </div>
-            <div class="activityicon">
-                {{#icon}}{{#pix}} {{key}}, {{component}}, {{alttext}} {{/pix}}{{/icon}}
-            </div>
-        </div>
-        <div class="meta">
-            <div class="timeuntil">
-                <span>{{timeuntil}}</span>
-            </div>
-            <div class="contexturls">
-                <a href="{{viewurl}}">
-                    Visit
-                </a>
-            </div>
-        </div>
-    </li>
-
-
-</div>

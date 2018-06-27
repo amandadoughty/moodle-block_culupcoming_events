@@ -20,8 +20,8 @@ YUI.add('moodle-block_culupcoming_events-scroll', function (Y, NAME) {
  * Scroll functionality.
  *
  * @package   block_culupcoming_events
- * @copyright 2014 onwards Amanda Doughty
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2013 onwards Amanda Doughty
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
 M.block_culupcoming_events = M.block_culupcoming_events || {};
@@ -36,12 +36,12 @@ M.block_culupcoming_events.scroll = {
     timer: null,
 
     init: function(params) {
-
         if (Y.one('.pages')) {
             Y.one('.pages').hide();
         }
 
         try {
+            var doc = Y.one(Y.config.doc);
             var reloaddiv = Y.one('.block_culupcoming_events .reload');
             var block = Y.one('.block_culupcoming_events');
             var id = block.get('id');
@@ -49,7 +49,7 @@ M.block_culupcoming_events.scroll = {
             var h2 = Y.one('#instance-' + id + '-header');
             h2.append(reloaddiv);
             reloaddiv.setStyle('display', 'inline-block');
-            Y.one('.reload .block_culupcoming_events_reload').on('click', this.reloadblock, this);
+            doc.delegate('click', this.reloadblock, '.block_culupcoming_events_reload', this);
         } catch (e) {
         }
 
@@ -60,36 +60,13 @@ M.block_culupcoming_events.scroll = {
         this.limitnum = params.limitnum;
         this.page = params.page;
         // Refresh the feed every 5 mins.
-        this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
-        this.filltobelowblock();
-        // When the block is docked. the reload link is created on the fly as the block
-        // is shown. This means that the click event is not attached. Here we listen for
-        // published events about changes to the dock so that we can reattach the click
-        // event to the reload link.
-        var dock = M.core.dock.get();
-        dock.on(['dock:initialised', 'dock:itemadded'], function() {
-            Y.Array.each(dock.dockeditems, function(dockeditem) {
-                dockeditem.on('dockeditem:showcomplete', function() {
-                    if (dockeditem.get('blockclass') === 'culupcoming_events') {
-                        try {
-                            var reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                            if (!reloader) {
-                                var reloaddiv = Y.one('.block_culupcoming_events .reload').cloneNode(true);
-                                var h2 = Y.one('#instance-' + dockeditem.get('blockinstanceid') + '-header' );
-                                h2.append(reloaddiv);
-                                reloaddiv.setStyle('display', 'inline-block');
-                                reloader = Y.one('.dockeditempanel_hd .block_culupcoming_events_reload');
-                            }
-                            if (reloader) {
-                                reloader.on('click', this.reloadblock, this);
-                            }
-                        } catch (e) {
-                        }
-                    }
-                },this);
-            },this);
-        },this);
+        this.timer = Y.later(1000 * 60 * 5, this, this.simulateclick, [], true);
 
+        this.filltobelowblock();
+
+        Y.publish('culcourse-upcomingevents:reloadevents', {
+            broadcast:2
+        });
     },
 
     filltobelowblock: function() {
@@ -100,7 +77,7 @@ M.block_culupcoming_events.scroll = {
         var lastdate;
 
         if ((scrollHeight - (scrollTop + clientHeight)) < 10) {
-            // Pause the automatic refresh
+            // Pause the automatic refresh.
             this.timer.cancel();
             var num = Y.all('.block_culupcoming_events .culupcoming_events li').size();
             if (num > 0) {
@@ -112,8 +89,8 @@ M.block_culupcoming_events.scroll = {
                 lastdate = 0;
             }
             this.addevents(num, lastid, lastdate);
-            // Start the automatic refresh again now we have the correct last item
-            this.timer = Y.later(1000 * 60 * 5, this, this.reloadevents, [], true);
+            // Start the automatic refresh again now we have the correct last item.
+            this.timer = Y.later(1000 * 60 * 5, this, this.simulateclick, [], true);
         }
     },
 
@@ -123,7 +100,7 @@ M.block_culupcoming_events.scroll = {
     },
 
     addevents: function(num, lastid, lastdate) {
-        // disable the scroller until this completes
+        // Disable the scroller until this completes.
         this.scroller.detach('scroll');
         Y.one('.block_culupcoming_events_reload').setStyle('display', 'none');
         Y.one('.block_culupcoming_events_loading').setStyle('display', 'inline-block');
@@ -149,9 +126,14 @@ M.block_culupcoming_events.scroll = {
                     if (data.error) {
                         this.timer.cancel();
                     } else {
-                        Y.one('.block_culupcoming_events .culupcoming_events ul').append(data.output);
+                        if (data.output) {
+                            var eventlist = Y.one('.block_culupcoming_events .culupcoming_events ul');
+                            var firstli = eventlist.one('li');
+                            var liwrapper = firstli.ancestor();
+                            liwrapper.append(data.output);
+                        }
                     }
-                    // renable the scroller if there are more events
+                    // Renable the scroller if there are more events.
                     if (!data.end) {
                         this.scroller.on('scroll', this.filltobelowblock, this);
                     }
@@ -159,7 +141,7 @@ M.block_culupcoming_events.scroll = {
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                 },
                 failure: function() {
-                    // error message
+                    // Error message.
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                     this.timer.cancel();
@@ -199,7 +181,10 @@ M.block_culupcoming_events.scroll = {
                         this.timer.cancel();
                     } else {
                         if (data.output) {
-                            Y.one('.block_culupcoming_events .culupcoming_events ul').set('innerHTML', data.output);
+                            var eventlist = Y.one('.block_culupcoming_events .culupcoming_events ul');
+                            var firstli = eventlist.one('li');
+                            var liwrapper = firstli.ancestor();
+                            liwrapper.setHTML(data.output);
                         }
                     }
 
@@ -207,13 +192,21 @@ M.block_culupcoming_events.scroll = {
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                 },
                 failure: function() {
-                    // error message
+                    // Error message.
                     Y.one('.block_culupcoming_events_loading').setStyle('display', 'none');
                     Y.one('.block_culupcoming_events_reload').setStyle('display', 'inline-block');
                     this.timer.cancel();
+                },
+                end: function() {
+                    Y.fire('culcourse-upcomingevents:reloadevents', {
+                        
+                    });
                 }
             }
         });
+    },
+    simulateclick: function() {
+        Y.one('.block_culupcoming_events_reload').simulate('click');
     }
 };
 
@@ -226,6 +219,7 @@ M.block_culupcoming_events.scroll = {
         "dom-core",
         "querystring",
         "event-custom",
-        "moodle-core-dock"
+        "moodle-core-dock",
+        "node-event-simulate"
     ]
 });

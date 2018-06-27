@@ -13,20 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Strings for component 'block_culupcoming_events', language 'en'
+ * CUL upcoming events block
  *
- * @package    block
- * @subpackage culupcoming_events
- * @copyright  2013 Tim Gagen <Tim.Gagen.1@city.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Language strings.
+ *
+ * @package    block/culupcoming_events
+ * @copyright  Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
 
-$string['pluginname'] = 'CUL Upcoming events';
-$string['blocktitlecourse'] = 'Module events';
-$string['blocktitlesite'] = 'CUL Upcoming events';
+$string['pluginname'] = 'CUL Upcoming Events';
+$string['blocktitlecourse'] = 'Module Events';
+$string['blocktitlesite'] = 'Upcoming Events';
 $string['anon'] = 'Picture of Anon';
 $string['courseevent'] = '{$a->name} in {$a->course} on ';
 $string['culupcoming_events:addinstance'] = 'Add a new CUL Upcoming Events block';

@@ -13,21 +13,21 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Version information for CUL Upcoming Events block
+ * CUL upcoming events block
  *
- * @package    block
- * @subpackage culupcoming_events
- * @copyright  2013 Tim Gagen <Tim.Gagen.1@city.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Version info for the CUL upcoming events block.
+ *
+ * @package    block/culupcoming_events
+ * @copyright  Amanda Doughty
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018041400;  // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2018041403;  // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2017110800;  // Requires this Moodle version.
 $plugin->component = 'block_culupcoming_events'; // Full name of the plugin (used for diagnostics).
-$plugin->maturity = MATURITY_BETA;
-$plugin->release = '3.0.0 (Build: 2018041400)';
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '3.1.0 (Build: 2018041403)';

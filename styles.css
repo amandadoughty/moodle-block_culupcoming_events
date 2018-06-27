@@ -8,7 +8,7 @@ div.block_culupcoming_events div.content {
 .dockeditempanel_hd .reload {
     display: none;
     text-align: right;
-    font-size: 0.8em;
+    padding-left: 5px;
 }
 
 .block_culupcoming_events .culupcoming_events {
@@ -33,6 +33,11 @@ div.block_culupcoming_events div.content {
 
 .block_culupcoming_events li.new {
     background-color: #fffacd;
+}
+
+.block_culupcoming_events li .event,
+.block_culupcoming_events li .meta {
+    font-size: 0;
 }
 
 .block_culupcoming_events .menubar li {
@@ -68,6 +73,7 @@ div.block_culupcoming_events div.content {
 }
 
 .block_culupcoming_events .notificationtext {
+    font-size: 0.9rem;
     display: inline-block;
     width: 70%;
 }
@@ -83,23 +89,19 @@ div.block_culupcoming_events div.content {
 }
 
 .block_culupcoming_events .timeuntil {
+    font-size: 0.8rem;
     display: inline-block;
     width: 50%;
     text-align: left;
-    font-size: 90%;
     font-style: italic;
     font-weight: bold;
 }
 
-.block_culupcoming_events .meta {
-    Width: 100%
-}
-
 .block_culupcoming_events .contexturls {
+    font-size: 0.8rem;
     display: inline-block;
     width: 50%;
     text-align: right;
-    font-size: 90%;
 }
 
 .block_culupcoming_events .footer {
@@ -117,7 +119,6 @@ div.block_culupcoming_events div.content {
     display: none;
     text-align: center;
     vertical-align: middle;
-    /*margin-left: -24px;*/
 }
 
 .block_culupcoming_events_reload img,
