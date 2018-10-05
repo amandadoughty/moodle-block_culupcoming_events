@@ -29,6 +29,7 @@ namespace block_culupcoming_events\output;
 use renderer_base;
 use renderable;
 use templatable;
+use html_writer;
 
 defined('MOODLE_INTERNAL') || die();
 
