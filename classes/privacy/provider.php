@@ -26,10 +26,7 @@
 
 namespace block_culupcoming_events\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 class provider implements \core_privacy\local\metadata\null_provider {
-
     use \core_privacy\local\legacy_polyfill;
 
     /**

@@ -83,8 +83,6 @@ class course_picture implements templatable, renderable {
     public function __construct(\stdClass $course) {
         global $CFG, $DB;
 
-        require_once($CFG->libdir.'/coursecatlib.php');
-
         if (empty($course->id)) {
             throw new coding_exception('Course id is required when printing course avatar image.');
         }
@@ -106,7 +104,7 @@ class course_picture implements templatable, renderable {
             $this->course = $DB->get_record('course', ['id' => $course->id], self::fields(), MUST_EXIST);
         }
 
-        $this->course = new \course_in_list($course);
+        $this->course = new \core_course_list_element($course);
     }
 
     /**
