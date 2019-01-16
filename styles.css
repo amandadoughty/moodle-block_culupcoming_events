@@ -68,7 +68,7 @@ div.block_culupcoming_events div.content {
     bottom: -100%;
     right: -100%;
     height: 35px;
-    max-width: none !important;
+    width: 35px;
     margin: auto;
 }
 

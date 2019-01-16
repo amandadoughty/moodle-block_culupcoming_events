@@ -27,12 +27,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configtext(
-        'block_culupcoming_events/gravatar',
-        get_string('gravatardefaulturl', 'admin'),
-        get_string('gravatardefaulturl_help', 'admin'), 'mm'
-    ));
-
     $options = [];
 
     for ($i = 0; $i <= 365; $i++) {

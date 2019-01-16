@@ -52,13 +52,6 @@ class course_picture implements templatable, renderable {
     public $link = true;
 
     /**
-     * @var int Size in pixels. Special values are (true/1 = 100px) and
-     * (false/0 = 35px)
-     * for backward compatibility.
-     */
-    public $size = 35;
-
-    /**
      * @var bool Add non-blank alt-text to the image.
      * Default true, set to false when image alt just duplicates text in screenreaders.
      */
@@ -137,14 +130,6 @@ class course_picture implements templatable, renderable {
             $alt = '';
         }
 
-        if (empty($this->size)) {
-            $size = 35;
-        } else if ($this->size === true or $this->size == 1) {
-            $size = 100;
-        } else {
-            $size = $this->size;
-        }
-
         $class = $this->class;
         $src = $this->get_url($PAGE, $this->output);
         $courseimg = ['src' => $src, 'alt' => $alt, 'title' => $alt, 'class' => $class];
@@ -174,20 +159,6 @@ class course_picture implements templatable, renderable {
 
         if (is_null($renderer)) {
             $renderer = $page->get_renderer('core');
-        }
-
-        // Sort out the size. Size is only required for the gravatar
-        // implementation presently.
-        if (empty($this->size)) {
-            $size = 35;
-        } else if ($this->size === true or $this->size == 1) {
-            $size = 100;
-        } else if ($this->size > 100) {
-            $size = (int)$this->size;
-        } else if ($this->size >= 50) {
-            $size = (int)$this->size;
-        } else {
-            $size = (int)$this->size;
         }
 
         $defaulturl = $renderer->image_url('u/f2'); // Default image.
@@ -220,41 +191,8 @@ class course_picture implements templatable, renderable {
                     return $url;
                 }
             }
-        } else if ($CFG->enablegravatar) {
-            // Normalise the size variable to acceptable bounds.
-            if ($size < 1 || $size > 512) {
-                $size = 35;
-            }
-            // Hash a fake course email address.
-            $gravataremail = "avatar{$this->course->id}@somewhere.com";
-            $md5 = md5(strtolower(trim($gravataremail)));
-            // Build a gravatar URL with what we know.
-
-            // Find the best default image URL we can (MDL-35669).
-            if (empty($config->gravatar)) {
-                $absoluteimagepath = $page->theme->resolve_image_location('u/f2', 'core');
-                if (strpos($absoluteimagepath, $CFG->dirroot) === 0) {
-                    $defaulturl = $CFG->wwwroot . substr($absoluteimagepath, strlen($CFG->dirroot));
-                } else {
-                    $defaulturl = $CFG->wwwroot . '/pix/u/f2.png';
-                }
-            } else {
-                $gravatardefault = $config->gravatar;
-                // If the currently requested page is https then we'll return an
-                // https gravatar page.
-                if (strpos($CFG->httpswwwroot, 'https:') === 0) {
-                    $gravatardefault = str_replace($CFG->wwwroot, $CFG->httpswwwroot, $gravatardefault); // Replace by secure url.
-                    return new moodle_url(
-                        "https://secure.gravatar.com/avatar/{$md5}",
-                        ['s' => $size, 'd' => $gravatardefault]
-                        );
-                } else {
-                    return new moodle_url(
-                        "http://www.gravatar.com/avatar/{$md5}",
-                        ['s' => $size, 'd' => $gravatardefault]
-                        );
-                }
-            }
+        } else {            
+            return \core_course\external\course_summary_exporter::get_course_pattern($this->course);
         }
 
         return $defaulturl;

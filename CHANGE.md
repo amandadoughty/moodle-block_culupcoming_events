@@ -1,5 +1,7 @@
 Version Information
 ===================
+Version 3.2.0
+  1. Removed gravatar code and replaced images with core_course\external\course_summary_exporter::get_course_pattern.
 Version 3.1.0
   1. Refactored JS to fix bugs with scrolling and reloading.
   2. Used delegation to assign click listener.
