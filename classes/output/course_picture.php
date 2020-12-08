@@ -192,7 +192,7 @@ class course_picture implements templatable, renderable {
                 }
             }
         } else {            
-            return \core_course\external\course_summary_exporter::get_course_pattern($this->course);
+            return $this->output->get_generated_image_for_id($this->course->id);
         }
 
         return $defaulturl;
