@@ -134,7 +134,8 @@ class eventlist implements templatable, renderable {
         return [
             'courseid' => $this->courseid,
             'events' => $events,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'more' => $more
         ];
     }
 
@@ -193,6 +194,7 @@ class eventlist implements templatable, renderable {
             [$calendar->users, $calendar->groups, $calendar->courses, $calendar->categories]
         );
 
+        // Remove site events from block if this is course.
         if ($calendar->course->id != SITEID) {
             $courseparam = [];
             $courseparam[1] = $calendar->course->id;
@@ -273,8 +275,9 @@ class eventlist implements templatable, renderable {
         if ($events !== false) {
             if (count($events) > ($limitfrom + $limitnum)) {
                 $more = true;
-                $events = array_slice($events, $limitfrom, $limitnum);
             }
+
+            $events = array_slice($events, $limitfrom, $limitnum);
 
             foreach ($events as $key => $event) {
                 $event = $this->add_event_metadata($event);
@@ -365,7 +368,6 @@ class eventlist implements templatable, renderable {
         );
 
         foreach ($tokens as $unit => $text) {
-
             if ($time < $unit) {
                 continue;
             }

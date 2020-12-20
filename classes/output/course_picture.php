@@ -191,7 +191,7 @@ class course_picture implements templatable, renderable {
                     return $url;
                 }
             }
-        } else {            
+        } else {
             return $this->output->get_generated_image_for_id($this->course->id);
         }
 

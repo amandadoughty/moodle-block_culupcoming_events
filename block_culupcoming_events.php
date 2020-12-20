@@ -106,8 +106,7 @@ class block_culupcoming_events extends block_base {
                 [[
                     'lookahead' => $lookahead,
                     'courseid' => $courseid,
-                    'limitnum' => $limitnum,
-                    'page' => $page
+                    'limitnum' => $limitnum
                 ]]
             );
         }
@@ -129,5 +128,5 @@ class block_culupcoming_events extends block_base {
             'instance' => $configs,
             'plugin' => new stdClass(),
         ];
-    }    
+    }
 }

@@ -32,23 +32,24 @@
     }
 }}
 
-<li id="{{id}}_{{timestart}}">
-    <!-- <div class="clearfix notifictionitem"> -->
-    <div{{!
-        }} class="event clearfix"{{!
-        }} data-eventtype-{{calendareventtype}}="1"{{!
-        }} data-region="event-item"{{!
-    }}>
+<li id="{{id}}_{{timestart}}" class="item">
+    <div
+        class="event clearfix"
+        data-eventtype-{{calendareventtype}}="1"
+        data-region="event-item"
+    >
         <div class="avatar">
             {{{img}}}
         </div>
         <div class="notificationtext">
-            <a{{!
-                }} data-type="event"{{!
-                }} data-action="view-event"{{!
-                }} data-event-id="{{id}}"{{!
-                }} href="{{viewurl}}"{{!
-            }}>{{{description}}}</a>
+            <a
+                data-type="event"
+                data-action="view-event"
+                data-event-id="{{id}}"
+                href="{{viewurl}}"
+            >
+                {{{description}}}
+            </a>
             {{{formattedtime}}}
         </div>
         <div class="activityicon">
@@ -62,5 +63,5 @@
         </a>
     </div>
 </li>
-</hr>
+<hr>
 

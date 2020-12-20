@@ -32,16 +32,11 @@
     }
 }}
 
-<div class="card-text"{{!
-    }} id="culupcoming_events-{{uniqid}}"{{!
-}}>
-    {{> core/overlay_loading}}
-    <ul>
-    {{#events}}        
-        {{> block_culupcoming_events/event}}        
-    {{/events}}
-    </ul>
-    {{^events}}
-        {{#str}}noupcomingevents, calendar{{/str}}
-    {{/events}}
-</div>
+<ul class="events">
+{{#events}}        
+    {{> block_culupcoming_events/event}}        
+{{/events}}
+</ul>
+{{^events}}
+    {{#str}}noupcomingevents, calendar{{/str}}
+{{/events}}

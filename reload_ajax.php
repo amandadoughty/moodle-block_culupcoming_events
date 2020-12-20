@@ -38,25 +38,23 @@ $PAGE->set_context(context_system::instance());
 $lookahead = required_param('lookahead', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $limitnum = required_param('limitnum', PARAM_INT);
-$page = required_param('page', PARAM_INT);
-$limitfrom = $page > 1 ? ($page * $limitnum) - $limitnum : 0;
 $list = '';
 $end = false;
 $renderer = $PAGE->get_renderer('block_culupcoming_events');
 
 $events = new eventlist(
-            $lookahead,
-            $courseid,
-            0,
-            0,
-            $limitfrom,
-            $limitnum,
-            $page
-        );
+    $lookahead,
+    $courseid,
+    0,
+    0,
+    0,
+    $limitnum,
+    0
+);
 
 $templatecontext = $events->export_for_template($renderer);
 $events = $templatecontext['events'];
-$more = $templatecontext['pagination'];
+$more = $templatecontext['more'];
 
 if ($events) {
     foreach ($events as $event) {

@@ -30,7 +30,6 @@ M.block_culupcoming_events.scroll = {
     lookahead: 365,
     courseid: 0,
     limitnum: null,
-    page: 0,
     scroller: null,
     reloader: null,
     timer: null,
@@ -58,10 +57,8 @@ M.block_culupcoming_events.scroll = {
         this.lookahead = params.lookahead;
         this.courseid = params.courseid;
         this.limitnum = params.limitnum;
-        this.page = params.page;
         // Refresh the feed every 5 mins.
         this.timer = Y.later(1000 * 60 * 5, this, this.simulateclick, [], true);
-
         this.filltobelowblock();
 
         Y.publish('culcourse-upcomingevents:reloadevents', {
@@ -79,9 +76,9 @@ M.block_culupcoming_events.scroll = {
         if ((scrollHeight - (scrollTop + clientHeight)) < 10) {
             // Pause the automatic refresh.
             this.timer.cancel();
-            var num = Y.all('.block_culupcoming_events .culupcoming_events li').size();
+            var num = Y.all('.block_culupcoming_events .culupcoming_events li.item').size();
             if (num > 0) {
-                var lastitem = Y.all('.block_culupcoming_events .culupcoming_events li').item(num - 1);
+                var lastitem = Y.all('.block_culupcoming_events .culupcoming_events li.item').item(num - 1);
                 lastid = lastitem.get('id').split('_')[0];
                 lastdate = lastitem.get('id').split('_')[1];
             } else {
@@ -110,10 +107,7 @@ M.block_culupcoming_events.scroll = {
             lookahead: this.lookahead,
             courseid: this.courseid,
             lastid : lastid,
-            lastdate : lastdate,
-            limitfrom: 1,
-            limitnum: this.limitnum,
-            page: this.page
+            limitnum: this.limitnum
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/scroll_ajax.php', {
@@ -127,10 +121,7 @@ M.block_culupcoming_events.scroll = {
                         this.timer.cancel();
                     } else {
                         if (data.output) {
-                            var eventlist = Y.one('.block_culupcoming_events .culupcoming_events ul');
-                            var firstli = eventlist.one('li');
-                            var liwrapper = firstli.ancestor();
-                            liwrapper.append(data.output);
+                            Y.one('.block_culupcoming_events .events').append(data.output);
                         }
                     }
                     // Renable the scroller if there are more events.
@@ -152,10 +143,10 @@ M.block_culupcoming_events.scroll = {
 
     reloadevents: function() {
         var lastid = 0;
-        var count = Y.all('.block_culupcoming_events .culupcoming_events li').size();
+        var count = Y.all('.block_culupcoming_events .culupcoming_events li.item').size();
 
         if (count) {
-            lastid = this.scroller.all('li').item(count - 1).get('id').split('_')[0];
+            lastid = this.scroller.all('li.item').item(count - 1).get('id').split('_')[0];
         }
 
         Y.one('.block_culupcoming_events_reload').setStyle('display', 'none');
@@ -165,8 +156,7 @@ M.block_culupcoming_events.scroll = {
             sesskey : M.cfg.sesskey,
             lookahead: this.lookahead,
             courseid: this.courseid,
-            limitnum : this.limitnum,
-            page : this.page
+            limitnum : this.limitnum
         };
 
         Y.io(M.cfg.wwwroot + '/blocks/culupcoming_events/reload_ajax.php', {
@@ -181,10 +171,8 @@ M.block_culupcoming_events.scroll = {
                         this.timer.cancel();
                     } else {
                         if (data.output) {
-                            var eventlist = Y.one('.block_culupcoming_events .culupcoming_events ul');
-                            var firstli = eventlist.one('li');
-                            var liwrapper = firstli.ancestor();
-                            liwrapper.setHTML(data.output);
+                            var eventlist = Y.one('.block_culupcoming_events .culupcoming_events .events');
+                            eventlist.setHTML(data.output);
                         }
                     }
 
@@ -199,7 +187,6 @@ M.block_culupcoming_events.scroll = {
                 },
                 end: function() {
                     Y.fire('culcourse-upcomingevents:reloadevents', {
-                        
                     });
                 }
             }
