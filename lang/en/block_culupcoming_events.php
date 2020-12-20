@@ -25,13 +25,13 @@
  */
 
 $string['pluginname'] = 'CUL Upcoming Events';
-$string['blocktitlecourse'] = 'Module Events';
-$string['blocktitlesite'] = 'Upcoming Events';
+$string['blocktitlecourse'] = 'Module events';
+$string['blocktitlesite'] = 'Events feed';
 $string['anon'] = 'Picture of Anon';
-$string['courseevent'] = '{$a->name} in {$a->course} on ';
+$string['courseevent'] = '{$a->name} in {$a->course} ';
 $string['culupcoming_events:addinstance'] = 'Add a new CUL Upcoming Events block';
 $string['culupcoming_events:myaddinstance'] = 'Add a new CUL Upcoming Events block to the My Moodle page';
-$string['event'] = '{$a->name} on ';
+$string['event'] = '{$a->name} ';
 $string['later'] = 'Later';
 $string['lookahead'] = 'Number of days in the future to look for upcoming events ';
 $string['lookahead_help'] = 'This sets the (maximum) number of days in the future
