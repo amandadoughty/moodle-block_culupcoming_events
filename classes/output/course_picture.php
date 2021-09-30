@@ -84,7 +84,7 @@ class course_picture implements templatable, renderable {
         $needrec = false;
 
         foreach (self::$fields as $field) {
-            if (!array_key_exists($field, $course)) {
+            if (!property_exists($course, $field)) {
                 $needrec = true;
                 debugging('Missing '.$field
                     .' property in $course object, this is a performance problem that needs to be fixed by a developer. '

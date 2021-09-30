@@ -17,8 +17,9 @@ Feature: CUL Upcoming events block with no JS
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I press "Blocks editing on"
-    And I add the "Events feed" block if not present
+    And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
+    And I press "Continue"
     And I follow "New event"
     And I set the following fields to these values:
         | id_eventtype | Site |
@@ -29,7 +30,7 @@ Feature: CUL Upcoming events block with no JS
     And I log out
 
   Scenario: events are paged with JS disabled
-    And I log in as "student1"
+    Given I log in as "student1"
     # Confirm the feed is showing only 7 events.
     Then I should see "7" events in feed
     # Confirm that paging loads remaining events

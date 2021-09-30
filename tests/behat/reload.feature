@@ -16,14 +16,12 @@ Feature: CUL Upcoming events block automatic reload
         | student1 | C1 | student |
     And I log in as "admin"
     And I create a calendar event with form data:
-        | id_eventtype | Site |
-        | id_name | My Site Event |
-        | id_timestart_day | ## +2 days ## j ## |
-        | id_timestart_month | ## +2 days ## n ## |
-        | id_timestart_year | ## +2 days ## Y ## |
+        | Type of event | Site |
+        | Event title | My Site Event |
+        | Date | ## +2 days ## |
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I press "Blocks editing on"
-    And I add the "CUL Upcoming Events" block if not present
+    And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I log out
 

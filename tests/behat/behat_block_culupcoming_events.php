@@ -41,6 +41,25 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException;
 class behat_block_culupcoming_events extends behat_base {
 
     /**
+     * Adds the CUL Upcoming Events block. Editing mode must be previously enabled.
+     *
+     * @Given /^I add the CUL Upcoming Events block$/
+     */
+    public function i_add_the_cul_upcoming_events_block() {
+        try {
+            // Try with pluginname (Boost flat navigation).
+            $this->execute('behat_blocks::i_add_the_block', ['CUL Upcoming Events']);
+        } catch (Exception $e) {
+            // Try with block title (Classic Add a block).
+            try {
+                $this->execute('behat_blocks::i_add_the_block', ['Events feed']);
+            } catch (Exception $e) {
+                $this->execute('behat_blocks::i_add_the_block', ['Module events']);
+            }
+        }
+    }
+
+    /**
      * Checks the number of events in the feed.
      *
      * @Then /^I should see "(?P<number_string>[^"]*)" events in feed$/
