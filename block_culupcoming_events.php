@@ -121,7 +121,7 @@ class block_culupcoming_events extends block_base {
      */
     public function applicable_formats() {
         return array('site' => true, 'my' => true, 'course' => true);
-    }    
+    }
 
     /**
      * Return the plugin config settings for external functions.

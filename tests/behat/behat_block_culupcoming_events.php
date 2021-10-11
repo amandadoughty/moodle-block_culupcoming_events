@@ -57,7 +57,7 @@ class behat_block_culupcoming_events extends behat_base {
                 $this->execute('behat_blocks::i_add_the_block', ['Module events']);
             }
         }
-    }    
+    }
 
     /**
      * Checks the number of events in the feed.
