@@ -115,6 +115,15 @@ class block_culupcoming_events extends block_base {
     }
 
     /**
+     * Returns a list of formats, and whether the block
+     * should be displayed within them.
+     * @return array(string => boolean) List of formats
+     */
+    public function applicable_formats() {
+        return array('site' => true, 'my' => true, 'course' => true);
+    }    
+
+    /**
      * Return the plugin config settings for external functions.
      *
      * @return stdClass the configs for both the block instance and plugin

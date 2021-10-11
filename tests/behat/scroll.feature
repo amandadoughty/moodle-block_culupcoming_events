@@ -16,7 +16,7 @@ Feature: CUL Upcoming events block scroll
         | id_repeats | 10 |
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I press "Blocks editing on"
-    And I add the "CUL Upcoming Events" block if not present
+    And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I log out
 

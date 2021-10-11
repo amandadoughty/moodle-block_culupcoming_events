@@ -25,7 +25,7 @@ Feature: CUL Upcoming events block used on the frontpage
         | id_name | My Site Event |
     And I navigate to "Appearance > Default Dashboard page" in site administration
     And I press "Blocks editing on"
-    And I add the "CUL Upcoming Events" block if not present
+    And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I log out
     And I log in as "teacher1"
@@ -45,14 +45,10 @@ Feature: CUL Upcoming events block used on the frontpage
 
   Scenario: Upcoming events shows all my events
     When I log in as "student1"
-    # Confirm the feed is showing two events.
+    # Confirm the feed is showing 3 events.
     Then I should see "3" events in feed
     # Confirm the submission event is visible.
     And I should see "My Site Event" in the "block_culupcoming_events" "block"
     And I should see "Test assignment name 1 is due in C1" in the "block_culupcoming_events" "block"
     And I should see "Test assignment name 2 is due in C2" in the "block_culupcoming_events" "block"
 
-  Scenario: Clicking view opens relevant page
-    Given I log in as "student1"
-    And I click on "Visit" "link" in the "Test assignment name 1 is due in C1" "list_item"
-    And "title[contains(text(),'C1: Calendar: Day view:')]" "xpath_element" should exist in the "head" "css_element"
