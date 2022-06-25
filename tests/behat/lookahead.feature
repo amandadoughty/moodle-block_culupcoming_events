@@ -6,21 +6,21 @@ Feature: CUL Upcoming events look ahead
 
   Background:
     Given the following "courses" exist:
-        | fullname | shortname | category | groupmode |
-        | Course 1 | C1 | 0 | 1 |
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1        | 0        | 1         |
     And the following "users" exist:
-        | username | firstname | lastname | email |
-        | teacher1 | Teacher | 1 | teacher1@example.com |
-        | student1 | Student | 1 | student1@example.com |
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+      | student1 | Student   | 1        | student1@example.com |
     And the following "course enrolments" exist:
-        | user | course | role |
-        | teacher1 | C1 | editingteacher |
-        | student1 | C1 | student |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
+      | student1 | C1     | student        |
     And the following config values are set as admin:
-        | lookahead | 15 | block_culupcoming_events |
+      | lookahead | 15 | block_culupcoming_events |
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I press "Blocks editing on"
+    And I turn editing mode on
     And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I log out
@@ -30,10 +30,11 @@ Feature: CUL Upcoming events look ahead
     And I am on "Course 1" course homepage with editing mode on
     And I add the "Calendar" block
     And I create a calendar event with form data:
-        | id_eventtype | Course |
-        | id_name | My Course Event |
-        | id_repeat | 1 |
-        | id_repeats | 10 |
+      | Type of event                      | course        |
+      | Course                             | Course 1      |
+      | Event title                        | Course Event  |
+      | Repeat this event                  | 1             |
+      | Repeat weekly, creating altogether | 10            |
     And I am on "Course 1" course homepage
     And I add the CUL Upcoming Events block
     And I configure the "block_culupcoming_events" block

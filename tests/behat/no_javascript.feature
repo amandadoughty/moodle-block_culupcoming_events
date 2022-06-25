@@ -6,26 +6,28 @@ Feature: CUL Upcoming events block with no JS
 
   Background:
     Given the following "courses" exist:
-        | fullname | shortname | category | groupmode |
-        | Course 1 | C1 | 0 | 1 |
-    Given the following "users" exist:
-        | username | firstname | lastname | email |
-        | student1 | Student | 1 | student1@example.com |
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1        | 0        | 1         |
+    And the following "users" exist:
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+      | student1 | Student   | 1        | student1@example.com |
     And the following "course enrolments" exist:
-        | user | course | role |
-        | student1 | C1 | student |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
+      | student1 | C1     | student        |
     And I log in as "admin"
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I press "Blocks editing on"
+    And I turn editing mode on
     And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I press "Continue"
     And I follow "New event"
     And I set the following fields to these values:
-        | id_eventtype | Site |
-        | id_name | Another site event  |
-        | id_repeat | 1 |
-        | id_repeats | 10 |
+      | Type of event                      | Site                |
+      | Event title                        | Another site event  |
+      | Repeat this event                  | 1                   |
+      | Repeat weekly, creating altogether | 10                  |
     And I press "Save changes"
     And I log out
 

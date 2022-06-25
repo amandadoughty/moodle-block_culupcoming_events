@@ -6,21 +6,21 @@ Feature: CUL Upcoming events block automatic reload
 
   Background:
     Given the following "courses" exist:
-        | fullname | shortname | category | groupmode |
-        | Course 1 | C1 | 0 | 1 |
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1        | 0        | 1         |
     And the following "users" exist:
-        | username | firstname | lastname | email |
-        | student1 | Student | 1 | student1@example.com |
+      | username | firstname | lastname | email                |
+      | student1 | Student   | 1        | student1@example.com |
     And the following "course enrolments" exist:
-        | user | course | role |
-        | student1 | C1 | student |
+      | user     | course | role           |
+      | student1 | C1     | student        |
     And I log in as "admin"
     And I create a calendar event with form data:
-        | Type of event | Site |
-        | Event title | My Site Event |
-        | Date | ## +2 days ## |
+      | Type of event | Site          |
+      | Event title   | My Site Event |
+      | Date          | ## +2 days ## |
     And I navigate to "Appearance > Default Dashboard page" in site administration
-    And I press "Blocks editing on"
+    And I turn editing mode on
     And I add the CUL Upcoming Events block
     And I press "Reset Dashboard for all users"
     And I log out
@@ -30,8 +30,8 @@ Feature: CUL Upcoming events block automatic reload
     And I am on homepage
     Then I should see "1" events in feed
     And the following "events" exist:
-        | name        | eventtype | course |
-        | C1 event 3  | course    | C1    |
+      | name        | eventtype | course |
+      | C1 event 3  | course    | C1    |
     Then I should see "1" events in feed
     And I click on "Refresh Feed" "link"
     Then I should see "2" events in feed
@@ -42,8 +42,8 @@ Feature: CUL Upcoming events block automatic reload
     And I am on homepage
     Then I should see "1" events in feed
     And the following "events" exist:
-        | name | eventtype | course |
-        | C1 event 3 | course | C1 |
+      | name | eventtype | course |
+      | C1 event 3 | course | C1 |
     Then I should see "1" events in feed
     And I wait "310" seconds
     Then I should see "2" events in feed
